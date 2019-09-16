@@ -1,0 +1,38 @@
+{
+  "name": "eventsy",
+  "version": "1.0.0",
+  "description": "Provides polyfills necessary for a full ES2015+ environment",
+  "contributors": [
+    {
+      "name": "Jake Whiteley",
+      "email": "jake@craftedbygc.com"
+    },
+    {
+      "name": "Luke Bailey",
+      "email": "luke@craftedbygc.com"
+    }
+  ],
+  "homepage": "https://craftedbygc.com",
+  "license": "GPL-3.0-or-later",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": "https://github.com/craftedbygc/Eventsy",
+  "main": "lib/index.js",
+  "dependencies": {
+    "@babel/plugin-proposal-private-methods": "^7.6.0",
+    "selector-set": "^1.1.4",
+    "weakset": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "cross-env": ">5.1.4",
+    "laravel-mix": ">4.0.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "scripts": {
+    "dev": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+  }
+}
