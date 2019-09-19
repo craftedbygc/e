@@ -6,6 +6,9 @@ In order to use, `e` must be instanstiated:
 Const E = new e()
 ````
 
+#### Browser support
+`e` works in all major browsers and IE11. It includes any polyfills it needs to work in IE11 by default.
+
 
 ## Using e
 
