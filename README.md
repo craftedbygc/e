@@ -33,6 +33,23 @@ E.delegate('click', '.js-open', callback)
 ````
 
 ### `off`
+You can remove a bound handler using the `off` method. The arguments are exactly the same as the `on` method, and events can be removed by passing a `string`, `HTMLElement`, or a `NodeList`.
+
+````js
+E.off('click', '.js-open', callback)
+````
+
+
+
+### `emit`
+You can use `emit` to trigger any given event on an element:
+````js
+E.emit('click', '.js-open')
+
+E.emit('click', document.querySelectorAll('.btn'))
+
+E.emit('click', document.getElementById('unique'))
+````
 
 
 
