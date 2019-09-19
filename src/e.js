@@ -40,18 +40,15 @@ export default class e {
      * @param callback
      */
     on(event, el, callback) {
-        el = this.#maybeRunQuerySelector(el)
-
-        if (NodeList.prototype.isPrototypeOf(el)) {
-            for (let i = 0; i < el.length; i++) {
-                el[i].addEventListener(event, callback)
-            }
-
-            return
-        }
-
         if (el.nodeType && el.nodeType === 1) {
             el.addEventListener(event, callback)
+            return
+        }
+        
+        el = this.#maybeRunQuerySelector(el)
+
+        for (let i = 0; i < el.length; i++) {
+            el[i].addEventListener(event, callback)
         }
     }
 
@@ -79,25 +76,29 @@ export default class e {
                 return
             }
         }
-
-        el = this.#maybeRunQuerySelector(el)
-
-        if (NodeList.prototype.isPrototypeOf(el)) {
-            for (let i = 0; i < el.length; i++) {
-                el[i].removeEventListener(event, callback)
-            }
-
+                                             
+        if (el.removeEventListener !== undefined) {
+            el.removeEventListener(event, callback)
             return
         }
 
-        if (el.removeEventListener !== undefined) {
-            el.removeEventListener(event, callback)
+        el = this.#maybeRunQuerySelector(el)
+
+        for (let i = 0; i < el.length; i++) {
+            el[i].removeEventListener(event, callback)
         }
     }
 
     emit(event, el) {
         if (el.nodeType && el.nodeType === 1) {
             this.#triggerEvent(event, el)
+            return
+        }
+        
+        el = this.#maybeRunQuerySelector(el)
+
+        for (let i = 0; i < el.length; i++) {
+            this.#triggerEvent(event, el[i])
         }
     }
 
@@ -149,4 +150,3 @@ export default class e {
         }
     }
 }
-
