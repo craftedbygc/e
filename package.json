@@ -1,7 +1,7 @@
 {
   "name": "@unseenco/e",
   "version": "1.0.0",
-  "description": "Supimple but efficient js events",
+  "description": "Simple but efficient js events",
   "contributors": [
     {
       "name": "Jake Whiteley",

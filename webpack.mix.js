@@ -4,7 +4,7 @@ mix.setPublicPath('/');
 
 
 mix.js('src/e.js', 'dist/e.min.js')
-    .js('src/test.js', 'dist/test.js')
+    .js('examples/test.js', 'examples/test.min.js')
     .webpackConfig({
         devtool: 'source-map'
     })
