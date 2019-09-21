@@ -1,15 +1,11 @@
 {
-  "name": "eventsy",
+  "name": "@unseenco/e",
   "version": "1.0.0",
-  "description": "Provides polyfills necessary for a full ES2015+ environment",
+  "description": "Supimple but efficient js events",
   "contributors": [
     {
       "name": "Jake Whiteley",
       "email": "jake@craftedbygc.com"
-    },
-    {
-      "name": "Luke Bailey",
-      "email": "luke@craftedbygc.com"
     }
   ],
   "homepage": "https://craftedbygc.com",
@@ -17,15 +13,15 @@
   "publishConfig": {
     "access": "public"
   },
-  "repository": "https://github.com/craftedbygc/Eventsy",
-  "main": "lib/index.js",
+  "repository": "https://github.com/craftedbygc/e",
+  "main": "src/e.js",
   "dependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.6.0",
     "selector-set": "^1.1.4",
     "weakset": "^1.0.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-private-methods": "^7.6.0",
     "cross-env": ">5.1.4",
     "laravel-mix": ">4.0.0",
     "vue-template-compiler": "^2.6.10"
