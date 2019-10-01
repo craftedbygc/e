@@ -1,9 +1,9 @@
 ## Getting started
 
-In order to use, `e` must be instanstiated:
+In order to use, `e` must be instantiated:
 
 ````js
-Const E = new e()
+const E = new e()
 ````
 
 #### Browser support
