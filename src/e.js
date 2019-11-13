@@ -9,6 +9,8 @@ export default class e {
      */
     #eventTypes = {}
 
+    #listeners = {}
+
     /**
      * Boot it up, Baby
      */
@@ -40,6 +42,15 @@ export default class e {
      * @param callback
      */
     on(event, el, callback) {
+        if (typeof el === 'function' && callback === undefined) {
+            if (this.#listeners[event] === undefined) {
+                this.#listeners[event] = []
+            }
+
+            this.#listeners[event].push(el)
+            return
+        }
+
         if (el.nodeType && el.nodeType === 1) {
             el.addEventListener(event, callback)
             return
@@ -90,6 +101,15 @@ export default class e {
     }
 
     emit(event, el) {
+        if (el === undefined) {
+            if (this.#listeners[event]) {
+                for (let i = 0; i < this.#listeners[event].length; i++) {
+                    this.#listeners[event][i]()
+                }
+            }
+            return
+        }
+
         if (el.nodeType && el.nodeType === 1) {
             this.#triggerEvent(event, el)
             return
