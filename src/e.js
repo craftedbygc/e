@@ -1,14 +1,16 @@
-import WeakSetPoly from './WeakSet'
 import SelectorSet from 'selector-set'
 
 export default class e {
-
     /**
      * Holds the SelectorSets for each event type
      * @type {{}}
      */
     #eventTypes = {}
 
+    /**
+     * Holds Bus event stacks
+     * @type {{}}
+     */
     #listeners = {}
 
     /**
@@ -37,16 +39,13 @@ export default class e {
     /**
      * Bind event to a string, NodeList, or element.
      *
-     * @param {String} event
-     * @param {String|NodeList|HTMLElement} el
-     * @param callback
+     * @param {string} event
+     * @param {string|NodeList|HTMLElement} el
+     * @param {*} [callback]
      */
     on(event, el, callback) {
         if (typeof el === 'function' && callback === undefined) {
-            if (this.#listeners[event] === undefined) {
-                this.#listeners[event] = []
-            }
-
+            this.#makeBusStack(event)
             this.#listeners[event].push(el)
             return
         }
@@ -55,7 +54,7 @@ export default class e {
             el.addEventListener(event, callback)
             return
         }
-        
+
         el = this.#maybeRunQuerySelector(el)
 
         for (let i = 0; i < el.length; i++) {
@@ -63,6 +62,13 @@ export default class e {
         }
     }
 
+    /**
+     * Add a delegated event.
+     *
+     * @param {string} event
+     * @param {string|NodeList|HTMLElement} delegate
+     * @param {*} [callback]
+     */
     delegate(event, delegate, callback) {
         let map = this.#eventTypes[name]
 
@@ -75,8 +81,31 @@ export default class e {
         map.add(delegate, callback)
     }
 
+    /**
+     * Remove a callback from a DOM element, or one or all Bus events.
+     *
+     * @param {string} event
+     * @param {string|NodeList|HTMLElement|Undefined} [el]
+     * @param {*} [callback]
+     */
     off(event, el, callback) {
         const map = this.#eventTypes[event]
+
+        if (el === undefined) {
+            this.#listeners[event] = []
+            return
+        }
+
+        if (typeof el === 'function') {
+            this.#makeBusStack(event)
+
+            for (let i = 0; i < this.#listeners[event].length; i++) {
+                if (this.#listeners[event][i] === el) {
+                    this.#listeners[event].splice(i, 1)
+                }
+            }
+            return
+        }
 
         if (map !== undefined) {
             map.remove(el, callback)
@@ -87,7 +116,7 @@ export default class e {
                 return
             }
         }
-                                             
+
         if (el.removeEventListener !== undefined) {
             el.removeEventListener(event, callback)
             return
@@ -100,13 +129,15 @@ export default class e {
         }
     }
 
+    /**
+     * Emit a DOM or Bus event.
+     *
+     * @param {string} event
+     * @param {string|NodeList|HTMLElement|Undefined} [el]
+     */
     emit(event, el) {
         if (el === undefined) {
-            if (this.#listeners[event]) {
-                for (let i = 0; i < this.#listeners[event].length; i++) {
-                    this.#listeners[event][i]()
-                }
-            }
+            this.triggerBus(event)
             return
         }
 
@@ -114,7 +145,7 @@ export default class e {
             this.#triggerEvent(event, el)
             return
         }
-        
+
         el = this.#maybeRunQuerySelector(el)
 
         for (let i = 0; i < el.length; i++) {
@@ -122,8 +153,38 @@ export default class e {
         }
     }
 
+    /**
+     * Trigger a bus stack.
+     *
+     * @param {string} event
+     */
+    triggerBus(event) {
+        if (this.#listeners[event]) {
+            for (let i = 0; i < this.#listeners[event].length; i++) {
+                this.#listeners[event][i]()
+            }
+        }
+    }
+
+    /**
+     * Maybe run querySelectorAll if input is a string.
+     *
+     * @param {HTMLElement|string} el
+     * @returns {NodeListOf<Element>}
+     */
     #maybeRunQuerySelector(el) {
         return typeof el === 'string' ? document.querySelectorAll(el) : el
+    }
+
+    /**
+     * Make a bus stack if not already created.
+     *
+     * @param {string} event
+     */
+    #makeBusStack(event) {
+        if (this.#listeners[event] === undefined) {
+            this.#listeners[event] = []
+        }
     }
 
     /**
@@ -142,17 +203,17 @@ export default class e {
     /**
      * Fires an event programmatically
      *
-     * @param {String} event
+     * @param {string} event
      * @param {HTMLElement} el
      * @returns {boolean}
      */
     #triggerEvent(event, el) {
         return el.dispatchEvent(
-            new CustomEvent(event, {
-                bubbles: true,
-                cancelable: true,
-                detail: null
-            })
+          new CustomEvent(event, {
+              bubbles: true,
+              cancelable: true,
+              detail: null
+          })
         )
     }
 
