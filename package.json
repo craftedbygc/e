@@ -1,7 +1,7 @@
 {
   "name": "@unseenco/e",
   "version": "1.1.0",
-  "description": "Simple but efficient js events - event bus, delegation, simple DOM event API, and custom events.",
+  "description": "Simple but efficient js events - event bus for your app, delegate events, simple DOM event API. ",
   "contributors": [
     {
       "name": "Jake Whiteley",
