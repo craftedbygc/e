@@ -55,7 +55,31 @@ E.emit('click', document.getElementById('unique'))
 ````
 
 
+## Event Bus
+The API for the event bus uses the exact same methods as above, but without supplying a DOM element.
 
+#### Registering a bus event
+Use the `on` method to register an event and a listener. As many listeners can be subscribed to your event as you like.
+````js
+E.on('my.bus.event', callback)
+````
+
+#### Triggering a bus event
+Use the `emit` method without an element will attempt to dispatch a bus event. If one exists, all listeners will be run in the order they were originally added:
+````js
+E.emit('my.bus.event')
+````
+
+#### Removing a listener from a bus event
+You can subscribe one or all events from the bus using `off`:
+
+````js
+// Will remove the supplied callback if found
+E.off('my.bus.event', callback)
+
+// Will remove all listeners for the bus event
+E.off('my.bus.event')
+````
 
 ### Binding handlers to maintain scope
 There are many ways to ensure that your event handlers keep the correct context when working with OO.
