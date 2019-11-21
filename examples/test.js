@@ -12,12 +12,11 @@ class Foo {
 
     init() {
         E.bindAll(this)
-        E.on('click', btn, this.onceHandler)
+        E.on('click', btn, this.eventHandler)
         E.on('click', btn2, this.offHandler)
         E.delegate('click','#btn3', this.onceHandler)
-        E.on('click', btn4, this.triggerHandler)
+        E.delegate('click','.deep', this.delegateHandler)
 
-        E.on('click', 'div .deep', this.onceHandler)
 
         // Event bus example
         E.on('event.bus.event', this.listener)
@@ -26,25 +25,28 @@ class Foo {
     }
 
     onceHandler(e) {
-        console.log('foobar', e.target)
+        console.log('delegated event target test', e)
     }
 
-    triggerHandler(e) {
-        E.emit('click', btn)
+    eventHandler(e) {
+        console.log('Dom event test', e)
+    }
+
+    delegateHandler(e) {
+        console.log('delegated nested event target test', e)
     }
 
     triggerBus() {
         console.log('triggering event.bus.event event')
-        E.emit('event.bus.event')
+        E.emit('event.bus.event', 'one', 2)
     }
 
     removeBus() {
         E.off('event.bus.event', this.listener)
-
     }
 
-    listener() {
-        console.log('Triggered via the event bus!')
+    listener(arg1, arg2) {
+        console.log('Triggered via the event bus!', arg1, arg2)
     }
 
     offHandler = () => {

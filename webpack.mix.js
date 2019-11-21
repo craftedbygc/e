@@ -1,11 +1,23 @@
-const mix = require('laravel-mix');
+const mix = require('laravel-mix')
 
-mix.setPublicPath('/');
+mix.setPublicPath('/')
 
+mix.webpackConfig({
+      devtool: 'source-map'
+  })
+  .sourceMaps()
 
-mix.js('src/e.js', 'dist/e.min.js')
-    .js('examples/test.js', 'examples/test.min.js')
-    .webpackConfig({
-        devtool: 'source-map'
+if (mix.inProduction() === false) {
+    mix.js('src/e.js', 'dist/e.js')
+      .js('examples/test.js', 'examples/test.min.js')
+} else {
+    mix.webpackConfig({
+        output: {
+            library: 'e',
+            libraryTarget: 'umd',
+            umdNamedDefine: true
+        }
     })
-    .sourceMaps();
+
+    mix.js('src/e.js', 'dist/e.min.js')
+}

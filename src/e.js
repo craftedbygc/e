@@ -1,3 +1,4 @@
+import WeakSetPoly from './WeakSet'
 import SelectorSet from 'selector-set'
 
 export default class e {
@@ -14,17 +15,10 @@ export default class e {
     #listeners = {}
 
     /**
-     * Boot it up, Baby
-     */
-    constructor() {
-        this.#polyfill()
-    }
-
-    /**
      * Binds all provided methods to a provided context.
      *
      * @param {object} context
-     * @param {array} methods Optional.
+     * @param {array} [methods] Optional.
      */
     bindAll(context, methods) {
         if (methods === undefined) {
@@ -55,9 +49,7 @@ export default class e {
             return
         }
 
-        el = this.#maybeRunQuerySelector(el)
-
-        for (let i = 0; i < el.length; i++) {
+        for (let i = 0; i < this.#maybeRunQuerySelector(el).length; i++) {
             el[i].addEventListener(event, callback)
         }
     }
@@ -70,7 +62,7 @@ export default class e {
      * @param {*} [callback]
      */
     delegate(event, delegate, callback) {
-        let map = this.#eventTypes[name]
+        let map = this.#eventTypes[event]
 
         if (map === undefined) {
             map = new SelectorSet()
@@ -122,9 +114,7 @@ export default class e {
             return
         }
 
-        el = this.#maybeRunQuerySelector(el)
-
-        for (let i = 0; i < el.length; i++) {
+        for (let i = 0; i < this.#maybeRunQuerySelector(el).length; i++) {
             el[i].removeEventListener(event, callback)
         }
     }
@@ -133,24 +123,10 @@ export default class e {
      * Emit a DOM or Bus event.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Undefined} [el]
+     * @param {array} [args]
      */
-    emit(event, el) {
-        if (el === undefined) {
-            this.triggerBus(event)
-            return
-        }
-
-        if (el.nodeType && el.nodeType === 1) {
-            this.#triggerEvent(event, el)
-            return
-        }
-
-        el = this.#maybeRunQuerySelector(el)
-
-        for (let i = 0; i < el.length; i++) {
-            this.#triggerEvent(event, el[i])
-        }
+    emit(event, ...args) {
+        this.#triggerBus(event, args)
     }
 
     /**
@@ -158,10 +134,10 @@ export default class e {
      *
      * @param {string} event
      */
-    triggerBus(event) {
+    #triggerBus(event, args) {
         if (this.#listeners[event]) {
             for (let i = 0; i < this.#listeners[event].length; i++) {
-                this.#listeners[event][i]()
+                this.#listeners[event][i](...args)
             }
         }
     }
@@ -193,41 +169,55 @@ export default class e {
      * @param {Event} e
      */
     #handleDelegation = e => {
-        const matches = this.#eventTypes[e.type].matches(e.target)
+        let matches = this.#traverse(this.#eventTypes[e.type], e.target)
 
-        for (let i = 0; i < matches.length; i++) {
-            matches[i].data(e)
-        }
-    }
-
-    /**
-     * Fires an event programmatically
-     *
-     * @param {string} event
-     * @param {HTMLElement} el
-     * @returns {boolean}
-     */
-    #triggerEvent(event, el) {
-        return el.dispatchEvent(
-          new CustomEvent(event, {
-              bubbles: true,
-              cancelable: true,
-              detail: null
-          })
-        )
-    }
-
-    /**
-     * Polyfill the CustomEvent constructor for IE11
-     */
-    #polyfill() {
-        if (typeof window.CustomEvent !== "function") {
-            window.CustomEvent = function (event, params) {
-                params = params || {bubbles: true, cancelable: true, detail: null}
-                let evt = document.createEvent('CustomEvent')
-                evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail)
-                return evt
+        if (matches.length) {
+            for (let i = 0; i < matches.length; i++) {
+                for (let i2 = 0; i2 < matches[i].stack.length; i2++) {
+                    this.#addDelegateTarget(e, matches[i].delegatedTarget)
+                    matches[i].stack[i2].data(e)
+                }
             }
         }
+    }
+
+    /**
+     * Find a matching selector for delegation
+     *
+     * @param {SelectorSet} listeners
+     * @param {HTMLElement} target
+     * @returns {[]}
+     */
+    #traverse(listeners, target) {
+        const queue = []
+        let node = target
+
+        do {
+            if (node.nodeType !== 1) {
+                break
+            }
+
+            const matches = listeners.matches(node)
+
+            if (matches.length) {
+                queue.push({delegatedTarget: node, stack: matches})
+            }
+        } while ((node = node.parentElement))
+
+        return queue
+    }
+
+    /**
+     * Add delegatedTarget attribute to dispatched delegated events
+     *
+     * @param {Event} event
+     * @param {HTMLElement} delegatedTarget
+     */
+    #addDelegateTarget(event, delegatedTarget) {
+        Object.defineProperty(event, 'delegatedTarget', {
+            configurable: true,
+            enumerable: true,
+            value: delegatedTarget
+        });
     }
 }

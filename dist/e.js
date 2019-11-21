@@ -81,104 +81,10 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ({
-
-/***/ "./examples/test.js":
-/*!**************************!*\
-  !*** ./examples/test.js ***!
-  \**************************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _src_e__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../src/e */ "./src/e.js");
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-var btn = document.getElementById('btn');
-var btn2 = document.getElementById('btn2');
-var btn4 = document.getElementById('btn4');
-var E = new _src_e__WEBPACK_IMPORTED_MODULE_0__["default"]();
-
-var Foo =
-/*#__PURE__*/
-function () {
-  function Foo() {
-    var _this = this;
-
-    _classCallCheck(this, Foo);
-
-    _defineProperty(this, "offHandler", function () {
-      E.off('click', btn, _this.onceHandler);
-      E.off('click', '#btn3', _this.onceHandler);
-    });
-  }
-
-  _createClass(Foo, [{
-    key: "init",
-    value: function init() {
-      E.bindAll(this);
-      E.on('click', btn, this.eventHandler);
-      E.on('click', btn2, this.offHandler);
-      E.delegate('click', '#btn3', this.onceHandler);
-      E.delegate('click', '.deep', this.delegateHandler); // Event bus example
-
-      E.on('event.bus.event', this.listener);
-      E.on('click', '#bus-test', this.triggerBus);
-      E.on('click', '#bus-off', this.removeBus);
-    }
-  }, {
-    key: "onceHandler",
-    value: function onceHandler(e) {
-      console.log('delegated event target test', e);
-    }
-  }, {
-    key: "eventHandler",
-    value: function eventHandler(e) {
-      console.log('Dom event test', e);
-    }
-  }, {
-    key: "delegateHandler",
-    value: function delegateHandler(e) {
-      console.log('delegated nested event target test', e);
-    }
-  }, {
-    key: "triggerBus",
-    value: function triggerBus() {
-      console.log('triggering event.bus.event event');
-      E.emit('event.bus.event', 'one', 2);
-    }
-  }, {
-    key: "removeBus",
-    value: function removeBus() {
-      E.off('event.bus.event', this.listener);
-    }
-  }, {
-    key: "listener",
-    value: function listener(arg1, arg2) {
-      console.log('Triggered via the event bus!', arg1, arg2);
-    }
-  }]);
-
-  return Foo;
-}();
-
-_defineProperty(Foo, "bar", 'foobar');
-
-var bar = new Foo();
-bar.init();
-
-/***/ }),
 
 /***/ "./node_modules/selector-set/selector-set.next.js":
 /*!********************************************************!*\
@@ -934,17 +840,17 @@ var _addDelegateTarget2 = function _addDelegateTarget2(event, delegatedTarget) {
 
 /***/ }),
 
-/***/ 1:
-/*!********************************!*\
-  !*** multi ./examples/test.js ***!
-  \********************************/
+/***/ 0:
+/*!************************!*\
+  !*** multi ./src/e.js ***!
+  \************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\wamp64\www\gc\e\examples\test.js */"./examples/test.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\gc\e\src\e.js */"./src/e.js");
 
 
 /***/ })
 
 /******/ });
-//# sourceMappingURL=test.min.js.map
+//# sourceMappingURL=e.js.map
