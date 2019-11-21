@@ -30,7 +30,6 @@ E.on('click', '.js-open', callback)
 
 ## DOM Events
 
-#### `on`
 The `on` method attaches an event to one or many DOM elements with an easy to use API:
 
 ````js
