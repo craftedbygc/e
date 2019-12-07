@@ -14,15 +14,15 @@
 In order to use, `e` must be instantiated:
 
 ````js
-import e from 'e'
+import e from '@unseenco/e'
 
 const E = new e()
 ````
 
-Alternatively, If you want to just bring in an instance of `e` and skip the above step, you can use the following import instead:i
+Alternatively, If you want to just bring in an instance of `e` and skip the above step, you can use the following import instead:
 
 ````js
-import E from 'e/instance'
+import E from '@unseenco/e/instance'
 
 E.on('click', '.js-open', callback)
 ````
@@ -53,6 +53,17 @@ The `delegate` method currently only accepts a selector string to match elements
 E.delegate('click', '.js-open', callback)
 ````
 
+#### delegatedTarget
+The `Event` object dispatched to your delegated handler also includes a `delegatedTarget` property, which contains a reference to the the element the event was bound to.
+
+````js
+
+E.delegate('click', '.js-open', function(event){
+    if (event.target != event.delegatedTarget) {
+        console.log('You clicked a child of .js-open!')
+    }
+})
+````
 
 ## Removing Events
 You can remove a bound handler using the `off` method. The arguments are exactly the same as the `on` method, and events can be removed by passing a `string`, `HTMLElement`, or a `NodeList`.

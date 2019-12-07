@@ -669,7 +669,9 @@ function () {
         return;
       }
 
-      for (var i = 0; i < _classPrivateMethodGet(this, _maybeRunQuerySelector, _maybeRunQuerySelector2).call(this, el).length; i++) {
+      el = _classPrivateMethodGet(this, _maybeRunQuerySelector, _maybeRunQuerySelector2).call(this, el);
+
+      for (var i = 0; i < el.length; i++) {
         el[i].addEventListener(event, callback);
       }
     }
@@ -689,7 +691,7 @@ function () {
       if (map === undefined) {
         map = new selector_set__WEBPACK_IMPORTED_MODULE_1__["default"]();
         _classPrivateFieldGet(this, _eventTypes)[event] = map;
-        document.addEventListener(event, _classPrivateFieldGet(this, _handleDelegation));
+        document.addEventListener(event, _classPrivateFieldGet(this, _handleDelegation), true);
       }
 
       map.add(_delegate, callback);
@@ -739,7 +741,9 @@ function () {
         return;
       }
 
-      for (var _i = 0; _i < _classPrivateMethodGet(this, _maybeRunQuerySelector, _maybeRunQuerySelector2).call(this, el).length; _i++) {
+      el = _classPrivateMethodGet(this, _maybeRunQuerySelector, _maybeRunQuerySelector2).call(this, el);
+
+      for (var _i = 0; _i < el.length; _i++) {
         el[_i].removeEventListener(event, callback);
       }
     }

@@ -49,7 +49,9 @@ export default class e {
             return
         }
 
-        for (let i = 0; i < this.#maybeRunQuerySelector(el).length; i++) {
+        el = this.#maybeRunQuerySelector(el)
+
+        for (let i = 0; i < el.length; i++) {
             el[i].addEventListener(event, callback)
         }
     }
@@ -67,7 +69,7 @@ export default class e {
         if (map === undefined) {
             map = new SelectorSet()
             this.#eventTypes[event] = map
-            document.addEventListener(event, this.#handleDelegation)
+            document.addEventListener(event, this.#handleDelegation, true)
         }
 
         map.add(delegate, callback)
@@ -114,7 +116,9 @@ export default class e {
             return
         }
 
-        for (let i = 0; i < this.#maybeRunQuerySelector(el).length; i++) {
+        el = this.#maybeRunQuerySelector(el)
+
+        for (let i = 0; i < el.length; i++) {
             el[i].removeEventListener(event, callback)
         }
     }

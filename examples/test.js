@@ -16,6 +16,8 @@ class Foo {
         E.on('click', btn2, this.offHandler)
         E.delegate('click','#btn3', this.onceHandler)
         E.delegate('click','.deep', this.delegateHandler)
+        E.delegate('mouseenter', '#mouseover', (e) => console.log('delegated mouse enter'))
+        E.delegate('mouseleave', '#mouseover', (e) => console.log('delegated mouse leave'))
 
 
         // Event bus example
