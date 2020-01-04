@@ -767,6 +767,7 @@ function () {
      * Trigger a bus stack.
      *
      * @param {string} event
+     * @param args
      */
 
   }]);

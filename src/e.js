@@ -137,6 +137,7 @@ export default class e {
      * Trigger a bus stack.
      *
      * @param {string} event
+     * @param args
      */
     #triggerBus(event, args) {
         if (this.#listeners[event]) {
@@ -222,6 +223,6 @@ export default class e {
             configurable: true,
             enumerable: true,
             value: delegatedTarget
-        });
+        })
     }
 }
