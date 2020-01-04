@@ -19,7 +19,6 @@ class Foo {
         E.delegate('mouseenter', '#mouseover', (e) => console.log('delegated mouse enter'))
         E.delegate('mouseleave', '#mouseover', (e) => console.log('delegated mouse leave'))
 
-
         // Event bus example
         E.on('event.bus.event', this.listener)
         E.on('click', '#bus-test', this.triggerBus)
