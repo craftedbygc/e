@@ -23,7 +23,7 @@ if (typeof window.WeakSet !== 'function') {
         val[this.name] = undefined
         return true
     }
-    
+
     proto['has'] = function (val) {
         return !!val[this.name]
     }
