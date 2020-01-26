@@ -112,6 +112,9 @@ function SelectorSet() {
   // Internal: Array of String selectors in the set
   this.selectors = [];
 
+  // Internal: Map of selector ids to objects
+  this.selectorObjects = {};
+
   // Internal: All Object index String names mapping to Index objects.
   this.indexes = Object.create(this.indexes);
 
@@ -121,11 +124,12 @@ function SelectorSet() {
 
 // Detect prefixed Element#matches function.
 var docElem = window.document.documentElement;
-var matches = (docElem.matches ||
-                docElem.webkitMatchesSelector ||
-                docElem.mozMatchesSelector ||
-                docElem.oMatchesSelector ||
-                docElem.msMatchesSelector);
+var matches =
+  docElem.matches ||
+  docElem.webkitMatchesSelector ||
+  docElem.mozMatchesSelector ||
+  docElem.oMatchesSelector ||
+  docElem.msMatchesSelector;
 
 // Public: Check if element matches selector.
 //
@@ -151,7 +155,6 @@ SelectorSet.prototype.querySelectorAll = function(selectors, context) {
   return context.querySelectorAll(selectors);
 };
 
-
 // Public: Array of indexes.
 //
 // name     - Unique String name
@@ -168,7 +171,7 @@ SelectorSet.prototype.indexes.push({
   name: 'ID',
   selector: function matchIdSelector(sel) {
     var m;
-    if (m = sel.match(idRe)) {
+    if ((m = sel.match(idRe))) {
       return m[0].slice(1);
     }
   },
@@ -185,7 +188,7 @@ SelectorSet.prototype.indexes.push({
   name: 'CLASS',
   selector: function matchClassSelector(sel) {
     var m;
-    if (m = sel.match(classRe)) {
+    if ((m = sel.match(classRe))) {
       return m[0].slice(1);
     }
   },
@@ -209,7 +212,7 @@ SelectorSet.prototype.indexes.push({
   name: 'TAG',
   selector: function matchTagSelector(sel) {
     var m;
-    if (m = sel.match(tagRe)) {
+    if ((m = sel.match(tagRe))) {
       return m[0].toUpperCase();
     }
   },
@@ -228,7 +231,6 @@ SelectorSet.prototype.indexes['default'] = {
     return [true];
   }
 };
-
 
 // Use ES Maps when supported
 var Map;
@@ -249,7 +251,6 @@ if (typeof window.Map === 'function') {
   })();
 }
 
-
 // Regexps adopted from Sizzle
 //   https://github.com/jquery/sizzle/blob/1.7/sizzle.js
 //
@@ -264,17 +265,23 @@ function parseSelectorIndexes(allIndexes, selector) {
   allIndexes = allIndexes.slice(0).concat(allIndexes['default']);
 
   var allIndexesLen = allIndexes.length,
-      i, j, m, dup, rest = selector,
-      key, index, indexes = [];
+    i,
+    j,
+    m,
+    dup,
+    rest = selector,
+    key,
+    index,
+    indexes = [];
 
   do {
     chunker.exec('');
-    if (m = chunker.exec(rest)) {
+    if ((m = chunker.exec(rest))) {
       rest = m[3];
       if (m[2] || !rest) {
         for (i = 0; i < allIndexesLen; i++) {
           index = allIndexes[i];
-          if (key = index.selector(m[1])) {
+          if ((key = index.selector(m[1]))) {
             j = indexes.length;
             dup = false;
             while (j--) {
@@ -284,7 +291,7 @@ function parseSelectorIndexes(allIndexes, selector) {
               }
             }
             if (!dup) {
-              indexes.push({index: index, key: key});
+              indexes.push({ index: index, key: key });
             }
             break;
           }
@@ -333,10 +340,17 @@ SelectorSet.prototype.logDefaultIndexUsed = function() {};
 //
 // Returns nothing.
 SelectorSet.prototype.add = function(selector, data) {
-  var obj, i, indexProto, key, index, objs,
-      selectorIndexes, selectorIndex,
-      indexes = this.activeIndexes,
-      selectors = this.selectors;
+  var obj,
+    i,
+    indexProto,
+    key,
+    index,
+    objs,
+    selectorIndexes,
+    selectorIndex,
+    indexes = this.activeIndexes,
+    selectors = this.selectors,
+    selectorObjects = this.selectorObjects;
 
   if (typeof selector !== 'string') {
     return;
@@ -347,6 +361,7 @@ SelectorSet.prototype.add = function(selector, data) {
     selector: selector,
     data: data
   };
+  selectorObjects[obj.id] = obj;
 
   selectorIndexes = parseSelectorIndexes(this.indexes, selector);
   for (i = 0; i < selectorIndexes.length; i++) {
@@ -387,10 +402,19 @@ SelectorSet.prototype.remove = function(selector, data) {
     return;
   }
 
-  var selectorIndexes, selectorIndex, i, j, k, selIndex, objs, obj;
-  var indexes = this.activeIndexes;
-  var removedIds = {};
-  var removeAll = arguments.length === 1;
+  var selectorIndexes,
+    selectorIndex,
+    i,
+    j,
+    k,
+    selIndex,
+    objs,
+    obj,
+    indexes = this.activeIndexes,
+    selectors = (this.selectors = []),
+    selectorObjects = this.selectorObjects,
+    removedIds = {},
+    removeAll = arguments.length === 1;
 
   selectorIndexes = parseSelectorIndexes(this.indexes, selector);
   for (i = 0; i < selectorIndexes.length; i++) {
@@ -416,7 +440,14 @@ SelectorSet.prototype.remove = function(selector, data) {
     }
   }
 
-  this.size -= Object.keys(removedIds).length;
+  for (i in removedIds) {
+    delete selectorObjects[i];
+    this.size--;
+  }
+
+  for (i in selectorObjects) {
+    selectors.push(selectorObjects[i].selector);
+  }
 };
 
 // Sort by id property handler.
@@ -439,7 +470,8 @@ SelectorSet.prototype.queryAll = function(context) {
     return [];
   }
 
-  var matches = {}, results = [];
+  var matches = {},
+    results = [];
   var els = this.querySelectorAll(this.selectors.join(', '), context);
 
   var i, j, len, len2, el, m, match, obj;
@@ -478,14 +510,16 @@ SelectorSet.prototype.matches = function(el) {
   }
 
   var i, j, k, len, len2, len3, index, keys, objs, obj, id;
-  var indexes = this.activeIndexes, matchedIds = {}, matches = [];
+  var indexes = this.activeIndexes,
+    matchedIds = {},
+    matches = [];
 
   for (i = 0, len = indexes.length; i < len; i++) {
     index = indexes[i];
     keys = index.element(el);
     if (keys) {
       for (j = 0, len2 = keys.length; j < len2; j++) {
-        if (objs = index.map.get(keys[j])) {
+        if ((objs = index.map.get(keys[j]))) {
           for (k = 0, len3 = objs.length; k < len3; k++) {
             obj = objs[k];
             id = obj.id;
@@ -558,78 +592,32 @@ module.exports = window.WeakSet;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return e; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return E; });
 /* harmony import */ var _WeakSet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WeakSet */ "./src/WeakSet.js");
 /* harmony import */ var _WeakSet__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_WeakSet__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var selector_set__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! selector-set */ "./node_modules/selector-set/selector-set.next.js");
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
-
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils */ "./src/utils.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _classPrivateFieldGet(receiver, privateMap) { var descriptor = privateMap.get(receiver); if (!descriptor) { throw new TypeError("attempted to get private field on non-instance"); } if (descriptor.get) { return descriptor.get.call(receiver); } return descriptor.value; }
-
-function _classPrivateMethodGet(receiver, privateSet, fn) { if (!privateSet.has(receiver)) { throw new TypeError("attempted to get private field on non-instance"); } return fn; }
 
 
 
+/**
+ * Public API
+ */
 
-var e =
+var E =
 /*#__PURE__*/
 function () {
-  function e() {
-    var _this = this;
-
-    _classCallCheck(this, e);
-
-    _addDelegateTarget.add(this);
-
-    _traverse.add(this);
-
-    _makeBusStack.add(this);
-
-    _maybeRunQuerySelector.add(this);
-
-    _triggerBus.add(this);
-
-    _eventTypes.set(this, {
-      writable: true,
-      value: {}
-    });
-
-    _listeners.set(this, {
-      writable: true,
-      value: {}
-    });
-
-    _handleDelegation.set(this, {
-      writable: true,
-      value: function value(e) {
-        var matches = _classPrivateMethodGet(_this, _traverse, _traverse2).call(_this, _classPrivateFieldGet(_this, _eventTypes)[e.type], e.target);
-
-        if (matches.length) {
-          for (var i = 0; i < matches.length; i++) {
-            for (var i2 = 0; i2 < matches[i].stack.length; i2++) {
-              _classPrivateMethodGet(_this, _addDelegateTarget, _addDelegateTarget2).call(_this, e, matches[i].delegatedTarget);
-
-              matches[i].stack[i2].data(e);
-            }
-          }
-        }
-      }
-    });
+  function E() {
+    _classCallCheck(this, E);
   }
 
-  _createClass(e, [{
+  _createClass(E, [{
     key: "bindAll",
 
     /**
@@ -659,10 +647,8 @@ function () {
     key: "on",
     value: function on(event, el, callback) {
       if (typeof el === 'function' && callback === undefined) {
-        _classPrivateMethodGet(this, _makeBusStack, _makeBusStack2).call(this, event);
-
-        _classPrivateFieldGet(this, _listeners)[event].push(el);
-
+        Object(_utils__WEBPACK_IMPORTED_MODULE_2__["makeBusStack"])(event);
+        _utils__WEBPACK_IMPORTED_MODULE_2__["listeners"][event].push(el);
         return;
       }
 
@@ -671,7 +657,7 @@ function () {
         return;
       }
 
-      el = _classPrivateMethodGet(this, _maybeRunQuerySelector, _maybeRunQuerySelector2).call(this, el);
+      el = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["maybeRunQuerySelector"])(el);
 
       for (var i = 0; i < el.length; i++) {
         el[i].addEventListener(event, callback);
@@ -688,12 +674,12 @@ function () {
   }, {
     key: "delegate",
     value: function delegate(event, _delegate, callback) {
-      var map = _classPrivateFieldGet(this, _eventTypes)[event];
+      var map = _utils__WEBPACK_IMPORTED_MODULE_2__["eventTypes"][event];
 
       if (map === undefined) {
         map = new selector_set__WEBPACK_IMPORTED_MODULE_1__["default"]();
-        _classPrivateFieldGet(this, _eventTypes)[event] = map;
-        document.addEventListener(event, _classPrivateFieldGet(this, _handleDelegation), true);
+        _utils__WEBPACK_IMPORTED_MODULE_2__["eventTypes"][event] = map;
+        document.addEventListener(event, _utils__WEBPACK_IMPORTED_MODULE_2__["handleDelegation"], true);
       }
 
       map.add(_delegate, callback);
@@ -709,19 +695,19 @@ function () {
   }, {
     key: "off",
     value: function off(event, el, callback) {
-      var map = _classPrivateFieldGet(this, _eventTypes)[event];
+      var map = _utils__WEBPACK_IMPORTED_MODULE_2__["eventTypes"][event];
 
       if (el === undefined) {
-        _classPrivateFieldGet(this, _listeners)[event] = [];
+        _utils__WEBPACK_IMPORTED_MODULE_2__["listeners"][event] = [];
         return;
       }
 
       if (typeof el === 'function') {
-        _classPrivateMethodGet(this, _makeBusStack, _makeBusStack2).call(this, event);
+        Object(_utils__WEBPACK_IMPORTED_MODULE_2__["makeBusStack"])(event);
 
-        for (var i = 0; i < _classPrivateFieldGet(this, _listeners)[event].length; i++) {
-          if (_classPrivateFieldGet(this, _listeners)[event][i] === el) {
-            _classPrivateFieldGet(this, _listeners)[event].splice(i, 1);
+        for (var i = 0; i < _utils__WEBPACK_IMPORTED_MODULE_2__["listeners"][event].length; i++) {
+          if (_utils__WEBPACK_IMPORTED_MODULE_2__["listeners"][event][i] === el) {
+            _utils__WEBPACK_IMPORTED_MODULE_2__["listeners"][event].splice(i, 1);
           }
         }
 
@@ -732,8 +718,8 @@ function () {
         map.remove(el, callback);
 
         if (map.size === 0) {
-          delete _classPrivateFieldGet(this, _eventTypes)[event];
-          document.removeEventListener(event, _classPrivateFieldGet(this, _handleDelegation));
+          delete _utils__WEBPACK_IMPORTED_MODULE_2__["eventTypes"][event];
+          document.removeEventListener(event, _utils__WEBPACK_IMPORTED_MODULE_2__["handleDelegation"]);
           return;
         }
       }
@@ -743,7 +729,7 @@ function () {
         return;
       }
 
-      el = _classPrivateMethodGet(this, _maybeRunQuerySelector, _maybeRunQuerySelector2).call(this, el);
+      el = Object(_utils__WEBPACK_IMPORTED_MODULE_2__["maybeRunQuerySelector"])(el);
 
       for (var _i = 0; _i < el.length; _i++) {
         el[_i].removeEventListener(event, callback);
@@ -763,57 +749,142 @@ function () {
         args[_key - 1] = arguments[_key];
       }
 
-      _classPrivateMethodGet(this, _triggerBus, _triggerBus2).call(this, event, args);
+      Object(_utils__WEBPACK_IMPORTED_MODULE_2__["triggerBus"])(event, args);
     }
     /**
-     * Trigger a bus stack.
+     * Return a clone of the delegated event stack for debugging.
      *
-     * @param {string} event
-     * @param args
+     * @returns {{}}
      */
 
+  }, {
+    key: "debugDelegated",
+    value: function debugDelegated() {
+      return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["clone"])(_utils__WEBPACK_IMPORTED_MODULE_2__["eventTypes"]);
+    }
+    /**
+     * Return a clone of the bus event stack for debugging.
+     *
+     * @returns {array}
+     */
+
+  }, {
+    key: "debugBus",
+    value: function debugBus() {
+      return Object(_utils__WEBPACK_IMPORTED_MODULE_2__["clone"])(_utils__WEBPACK_IMPORTED_MODULE_2__["listeners"]);
+    }
   }]);
 
-  return e;
+  return E;
 }();
 
-var _eventTypes = new WeakMap();
 
-var _listeners = new WeakMap();
 
-var _triggerBus = new WeakSet();
+/***/ }),
 
-var _maybeRunQuerySelector = new WeakSet();
+/***/ "./src/utils.js":
+/*!**********************!*\
+  !*** ./src/utils.js ***!
+  \**********************/
+/*! exports provided: eventTypes, listeners, makeBusStack, triggerBus, maybeRunQuerySelector, handleDelegation, clone */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var _makeBusStack = new WeakSet();
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "eventTypes", function() { return eventTypes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "listeners", function() { return listeners; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "makeBusStack", function() { return makeBusStack; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "triggerBus", function() { return triggerBus; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "maybeRunQuerySelector", function() { return maybeRunQuerySelector; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleDelegation", function() { return handleDelegation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clone", function() { return clone; });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
-var _handleDelegation = new WeakMap();
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
 
-var _traverse = new WeakSet();
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
 
-var _addDelegateTarget = new WeakSet();
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-var _triggerBus2 = function _triggerBus2(event, args) {
-  if (_classPrivateFieldGet(this, _listeners)[event]) {
-    for (var i = 0; i < _classPrivateFieldGet(this, _listeners)[event].length; i++) {
-      var _classPrivateFieldGet2;
+/**
+ * Holds the SelectorSets for each event type
+ * @type {{}}
+ */
+var eventTypes = {};
+/**
+ * Holds Bus event stacks
+ * @type {{}}
+ */
 
-      (_classPrivateFieldGet2 = _classPrivateFieldGet(this, _listeners)[event])[i].apply(_classPrivateFieldGet2, _toConsumableArray(args));
+var listeners = {};
+/**
+ * Make a bus stack if not already created.
+ *
+ * @param {string} event
+ */
+
+function makeBusStack(event) {
+  if (listeners[event] === undefined) {
+    listeners[event] = [];
+  }
+}
+/**
+ * Trigger a bus stack.
+ *
+ * @param {string} event
+ * @param args
+ */
+
+
+function triggerBus(event, args) {
+  if (listeners[event]) {
+    for (var i = 0; i < listeners[event].length; i++) {
+      var _listeners$event;
+
+      (_listeners$event = listeners[event])[i].apply(_listeners$event, _toConsumableArray(args));
     }
   }
-};
+}
+/**
+ * Maybe run querySelectorAll if input is a string.
+ *
+ * @param {HTMLElement|string} el
+ * @returns {NodeListOf<Element>}
+ */
 
-var _maybeRunQuerySelector2 = function _maybeRunQuerySelector2(el) {
+
+function maybeRunQuerySelector(el) {
   return typeof el === 'string' ? document.querySelectorAll(el) : el;
-};
+}
+/**
+ * Handle delegated events
+ *
+ * @param {Event} e
+ */
 
-var _makeBusStack2 = function _makeBusStack2(event) {
-  if (_classPrivateFieldGet(this, _listeners)[event] === undefined) {
-    _classPrivateFieldGet(this, _listeners)[event] = [];
+
+function handleDelegation(e) {
+  var matches = traverse(eventTypes[e.type], e.target);
+
+  if (matches.length) {
+    for (var i = 0; i < matches.length; i++) {
+      for (var i2 = 0; i2 < matches[i].stack.length; i2++) {
+        addDelegateTarget(e, matches[i].delegatedTarget);
+        matches[i].stack[i2].data(e);
+      }
+    }
   }
-};
+}
+/**
+ * Find a matching selector for delegation
+ *
+ * @param {SelectorSet} listeners
+ * @param {HTMLElement|EventTarget} target
+ * @returns {[]}
+ */
 
-var _traverse2 = function _traverse2(listeners, target) {
+
+function traverse(listeners, target) {
   var queue = [];
   var node = target;
 
@@ -833,15 +904,33 @@ var _traverse2 = function _traverse2(listeners, target) {
   } while (node = node.parentElement);
 
   return queue;
-};
+}
+/**
+ * Add delegatedTarget attribute to dispatched delegated events
+ *
+ * @param {Event} event
+ * @param {HTMLElement} delegatedTarget
+ */
 
-var _addDelegateTarget2 = function _addDelegateTarget2(event, delegatedTarget) {
+
+function addDelegateTarget(event, delegatedTarget) {
   Object.defineProperty(event, 'delegatedTarget', {
     configurable: true,
     enumerable: true,
     value: delegatedTarget
   });
-};
+}
+/**
+ * Creates a deep clone of an object.
+ *
+ * @param object
+ * @returns {object|array}
+ */
+
+
+function clone(object) {
+  return JSON.parse(JSON.stringify(object));
+}
 
 
 

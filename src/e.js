@@ -1,19 +1,11 @@
 import WeakSetPoly from './WeakSet'
 import SelectorSet from 'selector-set'
+import {clone, eventTypes, handleDelegation, listeners, makeBusStack, maybeRunQuerySelector, triggerBus} from './utils'
 
-export default class e {
-    /**
-     * Holds the SelectorSets for each event type
-     * @type {{}}
-     */
-    #eventTypes = {}
-
-    /**
-     * Holds Bus event stacks
-     * @type {{}}
-     */
-    #listeners = {}
-
+/**
+ * Public API
+ */
+export default class E {
     /**
      * Binds all provided methods to a provided context.
      *
@@ -39,8 +31,8 @@ export default class e {
      */
     on(event, el, callback) {
         if (typeof el === 'function' && callback === undefined) {
-            this.#makeBusStack(event)
-            this.#listeners[event].push(el)
+            makeBusStack(event)
+            listeners[event].push(el)
             return
         }
 
@@ -49,7 +41,7 @@ export default class e {
             return
         }
 
-        el = this.#maybeRunQuerySelector(el)
+        el = maybeRunQuerySelector(el)
 
         for (let i = 0; i < el.length; i++) {
             el[i].addEventListener(event, callback)
@@ -64,12 +56,12 @@ export default class e {
      * @param {*} [callback]
      */
     delegate(event, delegate, callback) {
-        let map = this.#eventTypes[event]
+        let map = eventTypes[event]
 
         if (map === undefined) {
             map = new SelectorSet()
-            this.#eventTypes[event] = map
-            document.addEventListener(event, this.#handleDelegation, true)
+            eventTypes[event] = map
+            document.addEventListener(event, handleDelegation, true)
         }
 
         map.add(delegate, callback)
@@ -83,19 +75,19 @@ export default class e {
      * @param {*} [callback]
      */
     off(event, el, callback) {
-        const map = this.#eventTypes[event]
+        const map = eventTypes[event]
 
         if (el === undefined) {
-            this.#listeners[event] = []
+            listeners[event] = []
             return
         }
 
         if (typeof el === 'function') {
-            this.#makeBusStack(event)
+            makeBusStack(event)
 
-            for (let i = 0; i < this.#listeners[event].length; i++) {
-                if (this.#listeners[event][i] === el) {
-                    this.#listeners[event].splice(i, 1)
+            for (let i = 0; i < listeners[event].length; i++) {
+                if (listeners[event][i] === el) {
+                    listeners[event].splice(i, 1)
                 }
             }
             return
@@ -105,8 +97,8 @@ export default class e {
             map.remove(el, callback)
 
             if (map.size === 0) {
-                delete this.#eventTypes[event]
-                document.removeEventListener(event, this.#handleDelegation)
+                delete eventTypes[event]
+                document.removeEventListener(event, handleDelegation)
                 return
             }
         }
@@ -116,7 +108,7 @@ export default class e {
             return
         }
 
-        el = this.#maybeRunQuerySelector(el)
+        el = maybeRunQuerySelector(el)
 
         for (let i = 0; i < el.length; i++) {
             el[i].removeEventListener(event, callback)
@@ -130,99 +122,24 @@ export default class e {
      * @param {array} [args]
      */
     emit(event, ...args) {
-        this.#triggerBus(event, args)
+        triggerBus(event, args)
     }
 
     /**
-     * Trigger a bus stack.
+     * Return a clone of the delegated event stack for debugging.
      *
-     * @param {string} event
-     * @param args
+     * @returns {{}}
      */
-    #triggerBus(event, args) {
-        if (this.#listeners[event]) {
-            for (let i = 0; i < this.#listeners[event].length; i++) {
-                this.#listeners[event][i](...args)
-            }
-        }
+    debugDelegated() {
+        return clone(eventTypes)
     }
 
     /**
-     * Maybe run querySelectorAll if input is a string.
+     * Return a clone of the bus event stack for debugging.
      *
-     * @param {HTMLElement|string} el
-     * @returns {NodeListOf<Element>}
+     * @returns {array}
      */
-    #maybeRunQuerySelector(el) {
-        return typeof el === 'string' ? document.querySelectorAll(el) : el
-    }
-
-    /**
-     * Make a bus stack if not already created.
-     *
-     * @param {string} event
-     */
-    #makeBusStack(event) {
-        if (this.#listeners[event] === undefined) {
-            this.#listeners[event] = []
-        }
-    }
-
-    /**
-     * Handle delegated events
-     *
-     * @param {Event} e
-     */
-    #handleDelegation = e => {
-        let matches = this.#traverse(this.#eventTypes[e.type], e.target)
-
-        if (matches.length) {
-            for (let i = 0; i < matches.length; i++) {
-                for (let i2 = 0; i2 < matches[i].stack.length; i2++) {
-                    this.#addDelegateTarget(e, matches[i].delegatedTarget)
-                    matches[i].stack[i2].data(e)
-                }
-            }
-        }
-    }
-
-    /**
-     * Find a matching selector for delegation
-     *
-     * @param {SelectorSet} listeners
-     * @param {HTMLElement} target
-     * @returns {[]}
-     */
-    #traverse(listeners, target) {
-        const queue = []
-        let node = target
-
-        do {
-            if (node.nodeType !== 1) {
-                break
-            }
-
-            const matches = listeners.matches(node)
-
-            if (matches.length) {
-                queue.push({delegatedTarget: node, stack: matches})
-            }
-        } while ((node = node.parentElement))
-
-        return queue
-    }
-
-    /**
-     * Add delegatedTarget attribute to dispatched delegated events
-     *
-     * @param {Event} event
-     * @param {HTMLElement} delegatedTarget
-     */
-    #addDelegateTarget(event, delegatedTarget) {
-        Object.defineProperty(event, 'delegatedTarget', {
-            configurable: true,
-            enumerable: true,
-            value: delegatedTarget
-        })
+    debugBus() {
+        return clone(listeners)
     }
 }

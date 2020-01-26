@@ -1,6 +1,6 @@
 {
   "name": "@unseenco/e",
-  "version": "1.3.6",
+  "version": "1.4.0",
   "description": "Simple but efficient js events - event bus for your app, delegate events, simple DOM event API. ",
   "contributors": [
     {
@@ -14,20 +14,19 @@
     "access": "public"
   },
   "repository": "https://github.com/craftedbygc/e",
-  "main": "dist/e.min.js",
+  "main": "src/e.js",
   "dependencies": {
-    "selector-set": "^1.1.4"
+    "selector-set": "^1.1.5"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-proposal-private-methods": "^7.6.0",
-    "cross-env": ">5.1.4",
-    "laravel-mix": ">4.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "cross-env": "^7.0.0",
+    "laravel-mix": "^5.0.1",
+    "vue-template-compiler": "^2.6.11"
   },
   "scripts": {
-    "dev": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "production": "node node_modules/cross-env/dist/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    "dev": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "watch": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+    "production": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   }
 }

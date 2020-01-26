@@ -1,10 +1,9 @@
-import e from '../src/e'
+import Events from '../src/e'
 
 const btn = document.getElementById('btn')
 const btn2 = document.getElementById('btn2')
-const btn4 = document.getElementById('btn4')
 
-const E = new e
+const E = new Events
 
 class Foo {
 
