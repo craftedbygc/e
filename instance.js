@@ -1,3 +1,3 @@
-import E from './dist/e.min.js'
+import E from './src/e.js'
 
 export default new E()
