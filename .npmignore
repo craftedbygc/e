@@ -1,4 +1,7 @@
+examples
 .idea/
 node_modules/
 mix-manifest.json
-examples
+*.map
+.babelrc
+*.mix.js
