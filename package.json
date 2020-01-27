@@ -1,6 +1,6 @@
 {
   "name": "@unseenco/e",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Simple but efficient js events - event bus for your app, delegate events, simple DOM event API.",
   "contributors": [
     {

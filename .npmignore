@@ -5,3 +5,4 @@ mix-manifest.json
 *.map
 .babelrc
 *.mix.js
+vanilla.js
