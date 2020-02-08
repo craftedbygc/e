@@ -1,6 +1,6 @@
 {
   "name": "@unseenco/e",
-  "version": "1.4.3",
+  "version": "1.4.6",
   "description": "Simple but efficient js events - event bus for your app, delegate events, simple DOM event API.",
   "contributors": [
     {
@@ -14,7 +14,7 @@
     "access": "public"
   },
   "repository": "https://github.com/craftedbygc/e",
-  "main": "src/e.js",
+  "main": "dist/e.umd.js",
   "dependencies": {
     "selector-set": "^1.1.5"
   },

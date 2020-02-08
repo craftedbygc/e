@@ -1,6 +1,6 @@
-`e` is a library which combines a eventBus/emitter, DOM events management, delegated events, and event-based utils into a single lightweight and performant library.
+`E` is a library which combines a eventBus/emitter, DOM events management, delegated events, and event-based utils into a single lightweight and performant library.
 
-`e` works in all major browsers and IE11. It includes any polyfills it needs to work in IE11 by default.
+`E` works in all major browsers and IE11. It includes any polyfills it needs to work in IE11 by default.
 * [Getting started](#getting-started)
 * [Adding DOM Events](#dom-events)
 * [Adding Delegated events](#delegated-events)
@@ -11,22 +11,22 @@
 
 ## Getting started
 
-In order to use, `e` must be instantiated:
+`E` is packaged as a babel-ified UMD module which is safe to use via `require` or `import` syntax.
+
+In order to use, `E` must be instantiated:
 
 ````js
-import e from '@unseenco/e'
+import Events from '@unseenco/e'
 
-const E = new e()
+const E = new Events()
 ````
 
-Alternatively, If you want to just bring in an instance of `e` and skip the above step, you can use the following import instead:
-
+If you don't care about IE11 and want to save a few bytes, then you could just bring in the un-compiled (and un-polyfilled) src code into your project:
 ````js
-import E from '@unseenco/e/instance'
-
-E.on('click', '.js-open', callback)
+import Events from '@unseenco/e/src/es6'
 ````
 
+And finally, if you want to be old-school, bring in the [CDN version](https://cdn.jsdelivr.net/npm/@unseenco/e@1.4.4/dist/e.js) to add `E` to the `window` (very lame).
 
 ## DOM Events
 
@@ -34,6 +34,7 @@ The `on` method attaches an event to one or many DOM elements with an easy to us
 
 ````js
 E.on('click', '.js-open', callback)
+E.on('resize', window, callback)
 
 // Also accepts NodeLists
 E.on('click', document.querySelectorAll('.btn'), callback)
