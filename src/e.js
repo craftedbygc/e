@@ -26,7 +26,7 @@ export default class E {
      * Bind event to a string, NodeList, or element.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement} el
+     * @param {string|NodeList|HTMLElement|Window|Document} el
      * @param {*} [callback]
      */
     on(event, el, callback) {
@@ -36,7 +36,7 @@ export default class E {
             return
         }
 
-        if (el.nodeType && el.nodeType === 1) {
+        if (el.nodeType && el.nodeType === 1 || el === window || el === document) {
             el.addEventListener(event, callback)
             return
         }
