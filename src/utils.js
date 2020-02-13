@@ -11,6 +11,12 @@ const eventTypes = {}
 const listeners = {}
 
 /**
+ * Events that don't bubble
+ * @type {string[]}
+ */
+const nonBubblers = ['mouseenter', 'mouseleave']
+
+/**
  * Make a bus stack if not already created.
  *
  * @param {string} event
@@ -56,8 +62,15 @@ function handleDelegation(e) {
     if (matches.length) {
         for (let i = 0; i < matches.length; i++) {
             for (let i2 = 0; i2 < matches[i].stack.length; i2++) {
-                addDelegateTarget(e, matches[i].delegatedTarget)
-                matches[i].stack[i2].data(e)
+                if (nonBubblers.indexOf(e.type) !== -1) {
+                    addDelegateTarget(e, matches[i].delegatedTarget)
+                    if (e.target === matches[i].delegatedTarget) {
+                        matches[i].stack[i2].data(e)
+                    }
+                } else {
+                    addDelegateTarget(e, matches[i].delegatedTarget)
+                    matches[i].stack[i2].data(e)
+                }
             }
         }
     }
@@ -96,7 +109,7 @@ function traverse(listeners, target) {
  * @param {HTMLElement} delegatedTarget
  */
 function addDelegateTarget(event, delegatedTarget) {
-    Object.defineProperty(event, 'delegatedTarget', {
+    Object.defineProperty(event, 'currentTarget', {
         configurable: true,
         enumerable: true,
         value: delegatedTarget
@@ -116,6 +129,7 @@ function clone(object) {
 export {
     eventTypes,
     listeners,
+    nonBubblers,
     makeBusStack,
     triggerBus,
     maybeRunQuerySelector,

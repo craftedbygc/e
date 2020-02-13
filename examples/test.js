@@ -11,12 +11,18 @@ class Foo {
 
     init() {
         E.bindAll(this)
-        E.on('resize', window, e => console.log('window resized!'))
-        E.on('click', btn, this.eventHandler)
+        E.on('resize click', window, this.eventHandler)
+        E.off('resize click', window, this.eventHandler)
+
+      /*  E.on('click', btn, this.eventHandler)
         E.on('click', btn2, this.offHandler)
         E.delegate('click','#btn3', this.onceHandler)
         E.delegate('click','.deep', this.delegateHandler)
-        E.delegate('mouseenter', '#mouseover', (e) => console.log('delegated mouse enter'))
+        E.delegate('mouseenter mouseleave', '#mouseover', (e) => {
+            console.log('delegated mouse enter')
+        })
+        
+        
         E.delegate('mouseleave', '#mouseover', (e) => console.log('delegated mouse leave'))
 
         E.delegate('click','button, h2', () => console.log('qs example'))
@@ -24,7 +30,7 @@ class Foo {
         // Event bus example
         E.on('event.bus.event', this.listener)
         E.on('click', '#bus-test', this.triggerBus)
-        E.on('click', '#bus-off', this.removeBus)
+        E.on('click', '#bus-off', this.removeBus)*/
     }
 
     onceHandler(e) {

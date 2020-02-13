@@ -1,6 +1,14 @@
-import WeakSetPoly from './WeakSet'
 import SelectorSet from 'selector-set'
-import {clone, eventTypes, handleDelegation, listeners, makeBusStack, maybeRunQuerySelector, triggerBus} from './utils'
+import {
+    clone,
+    eventTypes,
+    handleDelegation,
+    listeners,
+    makeBusStack,
+    maybeRunQuerySelector,
+    nonBubblers,
+    triggerBus
+} from './utils'
 
 /**
  * Public API
@@ -36,15 +44,19 @@ export default class E {
             return
         }
 
-        if (el.nodeType && el.nodeType === 1 || el === window || el === document) {
-            el.addEventListener(event, callback)
-            return
-        }
+        const events =  event.split(' ')
 
-        el = maybeRunQuerySelector(el)
+        for (let i = 0; i < events.length; i++) {
+            if (el.nodeType && el.nodeType === 1 || el === window || el === document) {
+                el.addEventListener(events[i], callback)
+                continue
+            }
 
-        for (let i = 0; i < el.length; i++) {
-            el[i].addEventListener(event, callback)
+            el = maybeRunQuerySelector(el)
+
+            for (let i = 0; i < el.length; i++) {
+                el[i].addEventListener(events[i], callback)
+            }
         }
     }
 
@@ -56,15 +68,24 @@ export default class E {
      * @param {*} [callback]
      */
     delegate(event, delegate, callback) {
-        let map = eventTypes[event]
+        const events =  event.split(' ')
 
-        if (map === undefined) {
-            map = new SelectorSet()
-            eventTypes[event] = map
-            document.addEventListener(event, handleDelegation, true)
+        for (let i = 0; i < events.length; i++) {
+            let map = eventTypes[events[i]]
+
+            if (map === undefined) {
+                map = new SelectorSet()
+                eventTypes[events[i]] = map
+
+                if (nonBubblers.indexOf(events[i]) !== -1) {
+                    document.addEventListener(events[i], handleDelegation, true)
+                } else {
+                    document.addEventListener(events[i], handleDelegation)
+                }
+            }
+
+            map.add(delegate, callback)
         }
-
-        map.add(delegate, callback)
     }
 
     /**
@@ -75,43 +96,47 @@ export default class E {
      * @param {*} [callback]
      */
     off(event, el, callback) {
-        const map = eventTypes[event]
+        const events =  event.split(' ')
 
-        if (el === undefined) {
-            listeners[event] = []
-            return
-        }
+        for (let i = 0; i < events.length; i++) {
+            const map = eventTypes[events[i]]
 
-        if (typeof el === 'function') {
-            makeBusStack(event)
+            if (el === undefined) {
+                listeners[events[i]] = []
+                continue
+            }
 
-            for (let i = 0; i < listeners[event].length; i++) {
-                if (listeners[event][i] === el) {
-                    listeners[event].splice(i, 1)
+            if (typeof el === 'function') {
+                makeBusStack(events[i])
+
+                for (let i = 0; i < listeners[events[i]].length; i++) {
+                    if (listeners[events[i]][i] === el) {
+                        listeners[events[i]].splice(i, 1)
+                    }
+                }
+                continue
+            }
+
+            if (map !== undefined) {
+                map.remove(el, callback)
+
+                if (map.size === 0) {
+                    delete eventTypes[events[i]]
+                    document.removeEventListener(events[i], handleDelegation)
+                    continue
                 }
             }
-            return
-        }
 
-        if (map !== undefined) {
-            map.remove(el, callback)
-
-            if (map.size === 0) {
-                delete eventTypes[event]
-                document.removeEventListener(event, handleDelegation)
-                return
+            if (el.removeEventListener !== undefined) {
+                el.removeEventListener(events[i], callback)
+                continue
             }
-        }
 
-        if (el.removeEventListener !== undefined) {
-            el.removeEventListener(event, callback)
-            return
-        }
+            el = maybeRunQuerySelector(el)
 
-        el = maybeRunQuerySelector(el)
-
-        for (let i = 0; i < el.length; i++) {
-            el[i].removeEventListener(event, callback)
+            for (let i = 0; i < el.length; i++) {
+                el[i].removeEventListener(events[i], callback)
+            }
         }
     }
 
