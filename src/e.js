@@ -96,26 +96,26 @@ export default class E {
      * @param {*} [callback]
      */
     off(event, el, callback) {
+        if (el === undefined) {
+            listeners[event] = []
+            return
+        }
+
+        if (typeof el === 'function') {
+            makeBusStack(event)
+
+            for (let i = 0; i < listeners[event].length; i++) {
+                if (listeners[event][i] === el) {
+                    listeners[event].splice(i, 1)
+                }
+            }
+            return
+        }
+
         const events =  event.split(' ')
 
         for (let i = 0; i < events.length; i++) {
             const map = eventTypes[events[i]]
-
-            if (el === undefined) {
-                listeners[events[i]] = []
-                continue
-            }
-
-            if (typeof el === 'function') {
-                makeBusStack(events[i])
-
-                for (let i = 0; i < listeners[events[i]].length; i++) {
-                    if (listeners[events[i]][i] === el) {
-                        listeners[events[i]].splice(i, 1)
-                    }
-                }
-                continue
-            }
 
             if (map !== undefined) {
                 map.remove(el, callback)
