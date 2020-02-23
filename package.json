@@ -1,7 +1,8 @@
 {
   "name": "@unseenco/e",
-  "version": "1.6.1",
-  "description": "Simple but efficient js events - event bus for your app, delegate events, simple DOM event API.",
+  "version": "1.6.2",
+  "description": "The complete js events solution - An event bus inspired by tiny-emitter, simple DOM event API, and incredibly efficient delegated events in one lightweight package.",
+  "keywords": ["eventbus", "bus", "events", "delegation", "delegated events", "DOM events", "binding", "events management", "event manager", "event bus", "tiny", "lightweight", "efficient"],
   "contributors": [
     {
       "name": "Jake Whiteley",
