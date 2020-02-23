@@ -3,7 +3,7 @@ const mix = require('laravel-mix')
 mix.setPublicPath('/')
 
 if (process.env.BUILD === 'vanilla') {
-    mix.js('vanilla.js', 'dist/e.js')
+    mix.js('src/vanilla.js', 'dist/e.js')
 } else if (process.env.BUILD === 'umd') {
     mix
       .webpackConfig({
@@ -13,7 +13,7 @@ if (process.env.BUILD === 'vanilla') {
               umdNamedDefine: true
           }
       })
-      .js('src/e.js', 'dist/e.umd.js')
+      .js('src/es5.js', 'dist/es5.js')
 } else if (mix.inProduction() === false) {
     mix.js('examples/test.js', 'examples/test.min.js')
 }

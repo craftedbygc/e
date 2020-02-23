@@ -11,7 +11,7 @@
 
 ## Getting started
 
-`E` is packaged as a babel-ified UMD module which is safe to use via `require` or `import` syntax.
+In order to save a few bytes, the default package does not support IE11, and imports as an ES6 module (suitable for webpack and other ES6 environments).
 
 In order to use, `E` must be instantiated:
 
@@ -21,9 +21,9 @@ import Events from '@unseenco/e'
 const E = new Events()
 ```
 
-If you don't care about IE11 and want to save a few bytes, then you could just bring in the un-compiled (and un-polyfilled) src code into your project:
+If you need to support IE11, you can bring in the library as a polyfilled UMD module using the following:
 ```js
-import Events from '@unseenco/e/src/es6'
+import Events from '@unseenco/e/dist/es5'
 ```
 
 And finally, if you want to be old-school, bring in the [CDN version](https://cdn.jsdelivr.net/npm/@unseenco/e@1.4.4/dist/e.js) to add `E` to the `window` (very lame).
