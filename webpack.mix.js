@@ -8,7 +8,7 @@ if (process.env.BUILD === 'vanilla') {
     mix
       .webpackConfig({
           output: {
-              library: 'e',
+              library: 'E',
               libraryTarget: 'umd',
               umdNamedDefine: true
           }
