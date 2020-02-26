@@ -11,11 +11,16 @@ class Foo {
 
     init() {
         E.bindAll(this)
+
         E.on('resize', window, e => console.log('window resized!'))
         E.on('click', btn, this.eventHandler)
         E.on('click', btn2, this.offHandler)
         E.delegate('click','#btn3', this.onceHandler)
         E.delegate('click','.deep', this.delegateHandler)
+
+
+        E.on('mouseenter', document.querySelectorAll('.nodelist'), () => console.log('nodelist'))
+        E.on('mouseenter', [...document.querySelectorAll('.nodelist')], () => console.log('nodelist array'))
 
         E.delegate('mouseenter', '#mouseover', (e) => {
             console.log('delegated mouse enter')

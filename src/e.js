@@ -34,7 +34,7 @@ export default class E {
      * Bind event to a string, NodeList, or element.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Window|Document} el
+     * @param {string|NodeList|HTMLElement|Window|Document|array} el
      * @param {*} [callback]
      */
     on(event, el, callback) {
@@ -54,8 +54,8 @@ export default class E {
 
             el = maybeRunQuerySelector(el)
 
-            for (let i = 0; i < el.length; i++) {
-                el[i].addEventListener(events[i], callback)
+            for (let n = 0; n < el.length; n++) {
+                el[n].addEventListener(events[i], callback)
             }
         }
     }
@@ -134,8 +134,8 @@ export default class E {
 
             el = maybeRunQuerySelector(el)
 
-            for (let i = 0; i < el.length; i++) {
-                el[i].removeEventListener(events[i], callback)
+            for (let n = 0; n < el.length;n++) {
+                el[n].removeEventListener(events[i], callback)
             }
         }
     }
