@@ -39,26 +39,26 @@ export default class E {
      * @param {*} [callback]
      */
     on(event, el, callback) {
-        if (typeof el === 'function' && callback === undefined) {
-            makeBusStack(event)
-            listeners[event].push(el)
-            return
-        }
+		if (typeof el === 'function' && callback === undefined) {
+			makeBusStack(event)
+			listeners[event].push(el)
+			return
+		}
 
-        const events =  event.split(' ')
+		const events =  event.split(' ')
 
-        for (let i = 0; i < events.length; i++) {
-            if (el.nodeType && el.nodeType === 1 || el === window || el === document) {
-                el.addEventListener(events[i], callback)
-                continue
-            }
+		for (let i = 0; i < events.length; i++) {
+			if (el.nodeType && el.nodeType === 1 || el === window || el === document) {
+				el.addEventListener(events[i], callback)
+				continue
+			}
 
-            el = maybeRunQuerySelector(el)
+			el = maybeRunQuerySelector(el)
 
-            for (let i = 0; i < el.length; i++) {
-                el[i].addEventListener(events[i], callback)
-            }
-        }
+			for (let n = 0; n < el.length; n++) {
+				el[n].addEventListener(events[i], callback)
+			}
+		}
     }
 
     /**
@@ -69,24 +69,24 @@ export default class E {
      * @param {*} [callback]
      */
     delegate(event, delegate, callback) {
-        const events =  event.split(' ')
+		const events =  event.split(' ')
 
-        for (let i = 0; i < events.length; i++) {
-            let map = eventTypes[events[i]]
+		for (let i = 0; i < events.length; i++) {
+			let map = eventTypes[events[i]]
 
-            if (map === undefined) {
-                map = new SelectorSet()
-                eventTypes[events[i]] = map
+			if (map === undefined) {
+				map = new SelectorSet()
+				eventTypes[events[i]] = map
 
-                if (nonBubblers.indexOf(events[i]) !== -1) {
-                    document.addEventListener(events[i], handleDelegation, true)
-                } else {
-                    document.addEventListener(events[i], handleDelegation)
-                }
-            }
+				if (nonBubblers.indexOf(events[i]) !== -1) {
+					document.addEventListener(events[i], handleDelegation, true)
+				} else {
+					document.addEventListener(events[i], handleDelegation)
+				}
+			}
 
-            map.add(delegate, callback)
-        }
+			map.add(delegate, callback)
+		}
     }
 
     /**
@@ -97,48 +97,48 @@ export default class E {
      * @param {*} [callback]
      */
     off(event, el, callback) {
-        if (el === undefined) {
-            listeners[event] = []
-            return
-        }
+		if (el === undefined) {
+			listeners[event] = []
+			return
+		}
 
-        if (typeof el === 'function') {
-            makeBusStack(event)
+		if (typeof el === 'function') {
+			makeBusStack(event)
 
-            for (let i = 0; i < listeners[event].length; i++) {
-                if (listeners[event][i] === el) {
-                    listeners[event].splice(i, 1)
-                }
-            }
-            return
-        }
+			for (let i = 0; i < listeners[event].length; i++) {
+				if (listeners[event][i] === el) {
+					listeners[event].splice(i, 1)
+				}
+			}
+			return
+		}
 
         const events =  event.split(' ')
 
-        for (let i = 0; i < events.length; i++) {
-            const map = eventTypes[events[i]]
+		for (let i = 0; i < events.length; i++) {
+			const map = eventTypes[events[i]]
 
-            if (map !== undefined) {
-                map.remove(el, callback)
+			if (map !== undefined) {
+				map.remove(el, callback)
 
-                if (map.size === 0) {
-                    delete eventTypes[events[i]]
-                    document.removeEventListener(events[i], handleDelegation)
-                    continue
-                }
-            }
+				if (map.size === 0) {
+					delete eventTypes[events[i]]
+					document.removeEventListener(events[i], handleDelegation)
+					continue
+				}
+			}
 
-            if (el.removeEventListener !== undefined) {
-                el.removeEventListener(events[i], callback)
-                continue
-            }
+			if (el.removeEventListener !== undefined) {
+				el.removeEventListener(events[i], callback)
+				continue
+			}
 
-            el = maybeRunQuerySelector(el)
+			el = maybeRunQuerySelector(el)
 
-            for (let i = 0; i < el.length; i++) {
-                el[i].removeEventListener(events[i], callback)
-            }
-        }
+			for (let n = 0; n < el.length;n++) {
+				el[n].removeEventListener(events[i], callback)
+			}
+		}
     }
 
     /**
