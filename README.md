@@ -41,6 +41,9 @@ E.on('click', document.querySelectorAll('.btn'), callback)
 
 // With a HTMLElement
 E.on('click', document.getElementById('unique'), callback)
+
+// You can also pass additional addEventListener options as a 4th param
+E.on('click', '#btn', callback, { passive: true })
 ```
 
 You can also add a callback to multiple events at once:

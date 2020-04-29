@@ -36,9 +36,9 @@ export default class E {
 	 * @param {string} event
 	 * @param {string|NodeList|HTMLElement|Window|Document|array} el
 	 * @param {*} [callback]
-	 * @param {{}} [options]
+	 * @param {{}|boolean} [options]
 	 */
-    on(event, el, callback, options = {}) {
+    on(event, el, callback, options) {
         if (typeof el === 'function' && callback === undefined) {
             makeBusStack(event)
             listeners[event].push(el)
@@ -61,28 +61,14 @@ export default class E {
         }
     }
 
-	/**
-	 * Shorthand for setting { once: true }.
-	 *
-	 * @param {string} event
-	 * @param {string|NodeList|HTMLElement|Window|Document|array} el
-	 * @param {*} [callback]
-	 * @param {{}} [options]
-	 */
-    one(event, el, callback, options = {}) {
-    	const defaults = { once: true }
-    	this.on(event, el, callback, { ...options, ...defaults })
-	}
-
     /**
      * Add a delegated event.
      *
      * @param {string} event
      * @param {string|NodeList|HTMLElement} delegate
      * @param {*} [callback]
-	 * @param {{}} [options]
      */
-    delegate(event, delegate, callback, options = {}) {
+    delegate(event, delegate, callback) {
         const events =  event.split(' ')
 
         for (let i = 0; i < events.length; i++) {
@@ -93,10 +79,9 @@ export default class E {
                 eventTypes[events[i]] = map
 
                 if (nonBubblers.indexOf(events[i]) !== -1) {
-                	const nonBubblersOptions = { useCapture: true }
-                    document.addEventListener(events[i], handleDelegation, { ...nonBubblersOptions, ...options })
+                    document.addEventListener(events[i], handleDelegation, true)
                 } else {
-                    document.addEventListener(events[i], handleDelegation, options)
+                    document.addEventListener(events[i], handleDelegation)
                 }
             }
 
