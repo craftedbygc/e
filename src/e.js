@@ -31,13 +31,14 @@ export default class E {
     }
 
     /**
-     * Bind event to a string, NodeList, or element.
-     *
-     * @param {string} event
-     * @param {string|NodeList|HTMLElement|Window|Document|array} el
-     * @param {*} [callback]
-     */
-    on(event, el, callback) {
+	 * Bind event to a string, NodeList, or element.
+	 *
+	 * @param {string} event
+	 * @param {string|NodeList|HTMLElement|Window|Document|array} el
+	 * @param {*} [callback]
+	 * @param {{}} [options]
+	 */
+    on(event, el, callback, options = {}) {
         if (typeof el === 'function' && callback === undefined) {
             makeBusStack(event)
             listeners[event].push(el)
@@ -48,17 +49,30 @@ export default class E {
 
         for (let i = 0; i < events.length; i++) {
             if (el.nodeType && el.nodeType === 1 || el === window || el === document) {
-                el.addEventListener(events[i], callback)
+                el.addEventListener(events[i], callback, options)
                 continue
             }
 
             el = maybeRunQuerySelector(el)
 
             for (let n = 0; n < el.length; n++) {
-                el[n].addEventListener(events[i], callback)
+                el[n].addEventListener(events[i], callback, options)
             }
         }
     }
+
+	/**
+	 * Shorthand for setting { once: true }.
+	 *
+	 * @param {string} event
+	 * @param {string|NodeList|HTMLElement|Window|Document|array} el
+	 * @param {*} [callback]
+	 * @param {{}} [options]
+	 */
+    one(event, el, callback, options = {}) {
+    	const defaults = { once: true }
+    	this.on(event, el, callback, { ...options, ...defaults })
+	}
 
     /**
      * Add a delegated event.
@@ -66,8 +80,9 @@ export default class E {
      * @param {string} event
      * @param {string|NodeList|HTMLElement} delegate
      * @param {*} [callback]
+	 * @param {{}} [options]
      */
-    delegate(event, delegate, callback) {
+    delegate(event, delegate, callback, options = {}) {
         const events =  event.split(' ')
 
         for (let i = 0; i < events.length; i++) {
@@ -78,9 +93,10 @@ export default class E {
                 eventTypes[events[i]] = map
 
                 if (nonBubblers.indexOf(events[i]) !== -1) {
-                    document.addEventListener(events[i], handleDelegation, true)
+                	const nonBubblersOptions = { useCapture: true }
+                    document.addEventListener(events[i], handleDelegation, { ...nonBubblersOptions, ...options })
                 } else {
-                    document.addEventListener(events[i], handleDelegation)
+                    document.addEventListener(events[i], handleDelegation, options)
                 }
             }
 
