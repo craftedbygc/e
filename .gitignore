@@ -2,3 +2,5 @@
 node_modules/
 mix-manifest.json
 examples
+
+package-lock.json

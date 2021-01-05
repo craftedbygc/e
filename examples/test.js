@@ -6,9 +6,6 @@ const btn2 = document.getElementById('btn2')
 const E = new Events
 
 class Foo {
-
-    static bar = 'foobar'
-
     init() {
         E.bindAll(this)
 
