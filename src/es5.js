@@ -145,7 +145,7 @@ export default class E {
      * Emit a DOM or Bus event.
      *
      * @param {string} event
-     * @param {array} [args]
+     * @param {...*} [args]
      */
     emit(event, ...args) {
         triggerBus(event, args)
