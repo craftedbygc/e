@@ -1,5 +1,7 @@
 `E` is a library which combines a eventBus/emitter, DOM events management, delegated events, and event-based utils into a single lightweight and performant library.
 
+![npm](https://img.shields.io/npm/v/@unseenco/e?style=flat-square)
+
 `E` works in all major browsers and IE11. It includes any polyfills it needs to work in IE11 by default.
 * [Getting started](#getting-started)
 * [Adding DOM Events](#dom-events)
