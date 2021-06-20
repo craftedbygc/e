@@ -28,7 +28,7 @@ If you need to support IE11, you can bring in the library as a polyfilled UMD mo
 import Events from '@unseenco/e/dist/es5'
 ```
 
-And finally, if you want to be old-school, bring in the [CDN version](https://cdn.jsdelivr.net/npm/@unseenco/e@1.4.4/dist/e.js) to add `E` to the `window` (very lame).
+And finally, if you want to be old-school, bring in the [CDN version](https://cdn.jsdelivr.net/npm/@unseenco/e@1.8.4/dist/e.js) to add `E` to the `window` (very lame).
 
 ## DOM Events
 

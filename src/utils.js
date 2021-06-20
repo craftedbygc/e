@@ -112,7 +112,7 @@ function addDelegateTarget(event, delegatedTarget) {
     Object.defineProperty(event, 'currentTarget', {
         configurable: true,
         enumerable: true,
-        value: delegatedTarget
+		get: () => delegatedTarget
     })
 }
 
@@ -123,7 +123,7 @@ function addDelegateTarget(event, delegatedTarget) {
  * @returns {object|array}
  */
 function clone(object) {
-    return JSON.parse(JSON.stringify(object))
+	return JSON.parse(JSON.stringify(object))
 }
 
 export {
