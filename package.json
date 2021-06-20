@@ -1,50 +1,52 @@
 {
-  "name": "@unseenco/e",
-  "version": "1.7.0",
-  "description": "The complete (but tiny) js events solution - An event bus/emitter, simple DOM event API, and incredibly efficient delegated events.",
-  "keywords": [
-    "eventbus",
-    "bus",
-    "events",
-    "delegation",
-    "delegated events",
-    "DOM events",
-    "binding",
-    "events management",
-    "event manager",
-    "event bus",
-    "tiny",
-    "lightweight",
-    "efficient",
-    "emitter"
-  ],
-  "contributors": [
-    {
-      "name": "Jake Whiteley",
-      "email": "jake@craftedbygc.com"
+    "name": "@unseenco/e",
+    "version": "1.9.1",
+    "description": "The complete (but tiny) js events solution - An event bus/emitter, simple DOM event API, and incredibly efficient delegated events.",
+    "keywords": [
+        "eventbus",
+        "bus",
+        "events",
+        "delegation",
+        "delegated events",
+        "DOM events",
+        "binding",
+        "events management",
+        "event manager",
+        "event bus",
+        "tiny",
+        "lightweight",
+        "efficient",
+        "emitter"
+    ],
+    "contributors": [
+        {
+            "name": "Jake Whiteley",
+            "email": "jake@craftedbygc.com"
+        }
+    ],
+    "homepage": "https://craftedbygc.com",
+    "license": "GPL-3.0-or-later",
+    "publishConfig": {
+        "access": "public"
+    },
+    "repository": "https://github.com/craftedbygc/e",
+    "main": "src/e.js",
+    "dependencies": {
+        "selector-set": "^1.1.5"
+    },
+    "devDependencies": {
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "cross-env": "^7.0.0",
+        "laravel-mix": "^5.0.1",
+        "typescript": "^4.2.4",
+        "vue-template-compiler": "^2.6.11"
+    },
+    "scripts": {
+        "dev": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "vanilla": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production BUILD=vanilla node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "umd": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production BUILD=umd node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "build": "npm run vanilla && npm run umd",
+        "ts": "npx typescript"
     }
-  ],
-  "homepage": "https://craftedbygc.com",
-  "license": "GPL-3.0-or-later",
-  "publishConfig": {
-    "access": "public"
-  },
-  "repository": "https://github.com/craftedbygc/e",
-  "main": "src/e.js",
-  "dependencies": {
-    "selector-set": "^1.1.5"
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "cross-env": "^7.0.0",
-    "laravel-mix": "^5.0.1",
-    "vue-template-compiler": "^2.6.11"
-  },
-  "scripts": {
-    "dev": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "watch": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "vanilla": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production BUILD=vanilla node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "umd": "node node_modules/cross-env/src/bin/cross-env.js NODE_ENV=production BUILD=umd node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "build": "npm run vanilla && npm run umd"
-  }
 }
