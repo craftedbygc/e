@@ -9,11 +9,6 @@ export const eventTypes: {};
  */
 export const listeners: {};
 /**
- * Events that don't bubble
- * @type {string[]}
- */
-export const nonBubblers: string[];
-/**
  * Make a bus stack if not already created.
  *
  * @param {string} event
