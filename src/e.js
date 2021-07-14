@@ -6,6 +6,7 @@ import {
 	listeners,
 	makeBusStack,
 	maybeRunQuerySelector,
+	nonBubblers,
 	triggerBus
 } from './utils'
 
@@ -33,7 +34,7 @@ export default class E {
 	 * Bind event to a string, NodeList, or element.
 	 *
 	 * @param {string} event
-	 * @param {string|NodeList|HTMLElement|Element|Window|Document|array|function} el
+	 * @param {string|NodeList|HTMLElement|Window|Document|array|function} el
 	 * @param {*} [callback]
 	 * @param {{}|boolean} [options]
 	 */
@@ -64,7 +65,7 @@ export default class E {
      * Add a delegated event.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element} delegate
+     * @param {string|NodeList|HTMLElement} delegate
      * @param {*} [callback]
      */
     delegate(event, delegate, callback) {
@@ -76,7 +77,12 @@ export default class E {
             if (map === undefined) {
                 map = new SelectorSet()
                 eventTypes[events[i]] = map
-				document.addEventListener(events[i], handleDelegation, true)
+
+                if (nonBubblers.indexOf(events[i]) !== -1) {
+                    document.addEventListener(events[i], handleDelegation, true)
+                } else {
+                    document.addEventListener(events[i], handleDelegation)
+                }
             }
 
             map.add(delegate, callback)
@@ -87,7 +93,7 @@ export default class E {
      * Remove a callback from a DOM element, or one or all Bus events.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element|window|Undefined} [el]
+     * @param {string|NodeList|HTMLElement|window|Undefined} [el]
      * @param {*} [callback]
 	 * @param {{}|boolean} [options]
      */
@@ -118,7 +124,12 @@ export default class E {
 
                 if (map.size === 0) {
                     delete eventTypes[events[i]]
-					document.removeEventListener(events[i], handleDelegation, true)
+
+					if (nonBubblers.indexOf(events[i]) !== -1) {
+						document.removeEventListener(events[i], handleDelegation, true)
+					} else {
+						document.removeEventListener(events[i], handleDelegation)
+					}
                     continue
                 }
             }

@@ -13,28 +13,28 @@ export default class E {
      * Bind event to a string, NodeList, or element.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element|Window|Document|array|function} el
+     * @param {string|NodeList|HTMLElement|Window|Document|array|function} el
      * @param {*} [callback]
      * @param {{}|boolean} [options]
      */
-    on(event: string, el: string | NodeList | HTMLElement | Element | Window | Document | any[] | Function, callback?: any, options?: {} | boolean): void;
+    on(event: string, el: string | NodeList | HTMLElement | Window | Document | any[] | Function, callback?: any, options?: {} | boolean): void;
     /**
      * Add a delegated event.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element} delegate
+     * @param {string|NodeList|HTMLElement} delegate
      * @param {*} [callback]
      */
-    delegate(event: string, delegate: string | NodeList | HTMLElement | Element, callback?: any): void;
+    delegate(event: string, delegate: string | NodeList | HTMLElement, callback?: any): void;
     /**
      * Remove a callback from a DOM element, or one or all Bus events.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element|window|Undefined} [el]
+     * @param {string|NodeList|HTMLElement|window|Undefined} [el]
      * @param {*} [callback]
      * @param {{}|boolean} [options]
      */
-    off(event: string, el?: string | NodeList | HTMLElement | Element | (Window & typeof globalThis) | undefined, callback?: any, options?: {} | boolean): void;
+    off(event: string, el?: string | NodeList | HTMLElement | (Window & typeof globalThis) | undefined, callback?: any, options?: {} | boolean): void;
     /**
      * Emit a DOM or Bus event.
      *
