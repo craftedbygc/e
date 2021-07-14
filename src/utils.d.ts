@@ -9,6 +9,11 @@ export const eventTypes: {};
  */
 export const listeners: {};
 /**
+ * Events that don't bubble
+ * @type {string[]}
+ */
+export const nonBubblers: string[];
+/**
  * Make a bus stack if not already created.
  *
  * @param {string} event
@@ -24,10 +29,10 @@ export function triggerBus(event: string, args: any): void;
 /**
  * Maybe run querySelectorAll if input is a string.
  *
- * @param {HTMLElement|string} el
+ * @param {HTMLElement|Element|string} el
  * @returns {NodeListOf<Element>}
  */
-export function maybeRunQuerySelector(el: HTMLElement | string): NodeListOf<Element>;
+export function maybeRunQuerySelector(el: HTMLElement | Element | string): NodeListOf<Element>;
 /**
  * Handle delegated events
  *

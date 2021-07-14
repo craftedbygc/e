@@ -7,6 +7,7 @@ import {
     listeners,
     makeBusStack,
     maybeRunQuerySelector,
+    nonBubblers,
     triggerBus
 } from './utils'
 
@@ -77,7 +78,12 @@ export default class E {
 			if (map === undefined) {
 				map = new SelectorSet()
 				eventTypes[events[i]] = map
-				document.addEventListener(events[i], handleDelegation, true)
+
+				if (nonBubblers.indexOf(events[i]) !== -1) {
+					document.addEventListener(events[i], handleDelegation, true)
+				} else {
+					document.addEventListener(events[i], handleDelegation)
+				}
 			}
 
 			map.add(delegate, callback)
@@ -119,7 +125,11 @@ export default class E {
 
 				if (map.size === 0) {
 					delete eventTypes[events[i]]
-					document.removeEventListener(events[i], handleDelegation, true)
+					if (nonBubblers.indexOf(events[i]) !== -1) {
+						document.removeEventListener(events[i], handleDelegation, true)
+					} else {
+						document.removeEventListener(events[i], handleDelegation)
+					}
 					continue
 				}
 			}
