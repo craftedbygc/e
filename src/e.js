@@ -34,7 +34,7 @@ export default class E {
 	 * Bind event to a string, NodeList, or element.
 	 *
 	 * @param {string} event
-	 * @param {string|NodeList|HTMLElement|Window|Document|array|function} el
+	 * @param {string|NodeList|HTMLElement|Element|Window|Document|array|function} el
 	 * @param {*} [callback]
 	 * @param {{}|boolean} [options]
 	 */
@@ -65,7 +65,7 @@ export default class E {
      * Add a delegated event.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement} delegate
+     * @param {string|NodeList|HTMLElement|Element} delegate
      * @param {*} [callback]
      */
     delegate(event, delegate, callback) {
@@ -93,7 +93,7 @@ export default class E {
      * Remove a callback from a DOM element, or one or all Bus events.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|window|Undefined} [el]
+     * @param {string|NodeList|HTMLElement|Element|window|Undefined} [el]
      * @param {*} [callback]
 	 * @param {{}|boolean} [options]
      */

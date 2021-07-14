@@ -14,7 +14,7 @@ const listeners = {}
  * Events that don't bubble
  * @type {string[]}
  */
-const nonBubblers = ['mouseenter', 'mouseleave']
+const nonBubblers = ['mouseenter', 'mouseleave', 'pointerenter', 'pointerleave']
 
 /**
  * Make a bus stack if not already created.
@@ -44,7 +44,7 @@ function triggerBus(event, args) {
 /**
  * Maybe run querySelectorAll if input is a string.
  *
- * @param {HTMLElement|string} el
+ * @param {HTMLElement|Element|string} el
  * @returns {NodeListOf<Element>}
  */
 function maybeRunQuerySelector(el) {
@@ -80,7 +80,7 @@ function handleDelegation(e) {
  * Find a matching selector for delegation
  *
  * @param {SelectorSet} listeners
- * @param {HTMLElement|EventTarget} target
+ * @param {HTMLElement|Element|EventTarget} target
  * @returns {[]}
  */
 function traverse(listeners, target) {
@@ -106,7 +106,7 @@ function traverse(listeners, target) {
  * Add delegatedTarget attribute to dispatched delegated events
  *
  * @param {Event} event
- * @param {HTMLElement} delegatedTarget
+ * @param {HTMLElement|Element} delegatedTarget
  */
 function addDelegateTarget(event, delegatedTarget) {
     Object.defineProperty(event, 'currentTarget', {
