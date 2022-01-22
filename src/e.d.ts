@@ -1,14 +1,16 @@
+export default instance;
+declare const instance: E;
 /**
  * Public API
  */
-export default class E {
+declare class E {
     /**
      * Binds all provided methods to a provided context.
      *
      * @param {object} context
-     * @param {array} [methods] Optional.
+     * @param {string[]} [methods] Optional.
      */
-    bindAll(context: object, methods?: any[]): void;
+    bindAll(context: object, methods?: string[]): void;
     /**
      * Bind event to a string, NodeList, or element.
      *
@@ -39,9 +41,9 @@ export default class E {
      * Emit a DOM or Bus event.
      *
      * @param {string} event
-     * @param {...*} [args]
+     * @param {...*} args
      */
-    emit(event: string, ...args?: any[]): void;
+    emit(event: string, ...args: any[]): void;
     /**
      * Return a clone of the delegated event stack for debugging.
      *

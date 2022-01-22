@@ -13,26 +13,15 @@
 
 ## Getting started
 
-In order to save a few bytes, the default package does not support IE11, and imports as an ES6 module (suitable for webpack and other ES6 environments).
-
-In order to use, `E` must be instantiated:
+In order to use, just import it and go!:
 
 ```js
-import Events from '@unseenco/e'
-
-const E = new Events()
+import E from '@unseenco/e'
 ```
-
-If you need to support IE11, you can bring in the library as a polyfilled UMD module using the following:
-```js
-import Events from '@unseenco/e/dist/es5'
-```
-
-And finally, if you want to be old-school, bring in the [CDN version](https://cdn.jsdelivr.net/npm/@unseenco/e@1.8.4/dist/e.js) to add `E` to the `window` (very lame).
 
 ## DOM Events
 
-The `on` method attaches an event to one or many DOM elements with an easy to use API:
+The `on` method attaches an event to one or many DOM elements with an easy-to-use API:
 
 ```js
 E.on('click', '.js-open', callback)
@@ -116,10 +105,9 @@ There are many ways to ensure that your event handlers keep the correct context 
 
 #### Closure method (preferred)
 
-Probably the simplest method way to keep scope in handlers:
+Probably the simplest method way to keep scope in handlers is to use Babel:
 
 ```js
-// Include @babel/plugin-proposal-class-properties for property support in classes
 class Foo {
     bar = (e) => {
         console.log(this)
@@ -129,7 +117,7 @@ class Foo {
 
 #### Using `bindAll`
 
-`Unseen.e` has a handy `bindAll` method if you prefer to do it the old fashioned way:
+`Unseen.e` has a handy `bindAll` method if you prefer to do it the old-fashioned way:
 ```js
 class Foo {
     constructor() {

@@ -13,15 +13,15 @@ import {
 /**
  * Public API
  */
-export default class E {
+class E {
     /**
      * Binds all provided methods to a provided context.
      *
      * @param {object} context
-     * @param {array} [methods] Optional.
+     * @param {string[]} [methods] Optional.
      */
     bindAll(context, methods) {
-        if (methods === undefined) {
+        if (!methods) {
             methods = Object.getOwnPropertyNames(Object.getPrototypeOf(context))
         }
 
@@ -151,7 +151,7 @@ export default class E {
      * Emit a DOM or Bus event.
      *
      * @param {string} event
-     * @param {...*} [args]
+     * @param {...*} args
      */
     emit(event, ...args) {
         triggerBus(event, args)
@@ -175,3 +175,6 @@ export default class E {
         return clone(listeners)
     }
 }
+
+const instance = new E()
+export default instance
