@@ -14,5 +14,5 @@ mix
 			umdNamedDefine: true
 		}
 	})
-	.js('src/e.js', 'dist/e.min.js')
+	.js('src/e.js', 'dist/e.umd.js')
 
