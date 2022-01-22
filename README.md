@@ -2,7 +2,7 @@
 
 ![npm](https://img.shields.io/npm/v/@unseenco/e?style=flat-square)
 
-`E` works in all major browsers and IE11. It includes any polyfills it needs to work in IE11 by default.
+`E` works in all modern browsers (not IE11!).
 * [Getting started](#getting-started)
 * [Adding DOM Events](#dom-events)
 * [Adding Delegated events](#delegated-events)
