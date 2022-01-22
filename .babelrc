@@ -1,5 +1,12 @@
 {
-  "plugins": [
-    "@babel/plugin-proposal-class-properties"
-  ]
+	"presets": [
+		[
+			"@babel/preset-env",
+			{
+				"useBuiltIns": "usage",
+				"bugfixes": true,
+				"corejs": 3
+			}
+		]
+	]
 }
