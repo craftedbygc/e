@@ -32,13 +32,13 @@ declare class E {
      * Remove a callback from a DOM element, or one or all Bus events.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element|window|Undefined} [el]
+     * @param {string|NodeList|HTMLElement|Element|Window|undefined} [el]
      * @param {*} [callback]
      * @param {{}|boolean} [options]
      */
-    off(event: string, el?: string | NodeList | HTMLElement | Element | (Window & typeof globalThis) | undefined, callback?: any, options?: {} | boolean): void;
+    off(event: string, el?: string | NodeList | HTMLElement | Element | Window | undefined, callback?: any, options?: {} | boolean): void;
     /**
-     * Emit a DOM or Bus event.
+     * Emit a Bus event.
      *
      * @param {string} event
      * @param {...*} args
