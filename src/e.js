@@ -1,13 +1,13 @@
 import SelectorSet from 'selector-set'
 import {
-	clone,
-	eventTypes,
-	handleDelegation,
-	listeners,
-	makeBusStack,
-	maybeRunQuerySelector,
-	nonBubblers,
-	triggerBus
+    clone,
+    eventTypes,
+    handleDelegation,
+    listeners,
+    makeBusStack,
+    maybeRunQuerySelector,
+    nonBubblers,
+    triggerBus
 } from './utils'
 
 /**
@@ -31,22 +31,22 @@ class E {
     }
 
     /**
-	 * Bind event to a string, NodeList, or element.
-	 *
-	 * @param {string} event
-	 * @param {string|NodeList|HTMLElement|Element|Window|Document|array|function} el
-	 * @param {*} [callback]
-	 * @param {{}|boolean} [options]
-	 */
+     * Bind event to a string, NodeList, or element.
+     *
+     * @param {string} event
+     * @param {string|NodeList|HTMLElement|Element|Window|Document|array|function} el
+     * @param {*} [callback]
+     * @param {{}|boolean} [options]
+     */
     on(event, el, callback, options) {
-		const events =  event.split(' ')
+        const events = event.split(' ')
 
         for (let i = 0; i < events.length; i++) {
-			if (typeof el === 'function' && callback === undefined) {
-				makeBusStack(events[i])
-				listeners[events[i]].push(el)
-				continue
-			}
+            if (typeof el === 'function' && callback === undefined) {
+                makeBusStack(events[i])
+                listeners[events[i]].push(el)
+                continue
+            }
 
             if (el.nodeType && el.nodeType === 1 || el === window || el === document) {
                 el.addEventListener(events[i], callback, options)
@@ -69,7 +69,7 @@ class E {
      * @param {*} [callback]
      */
     delegate(event, delegate, callback) {
-        const events =  event.split(' ')
+        const events = event.split(' ')
 
         for (let i = 0; i < events.length; i++) {
             let map = eventTypes[events[i]]
@@ -93,29 +93,29 @@ class E {
      * Remove a callback from a DOM element, or one or all Bus events.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element|window|Undefined} [el]
+     * @param {string|NodeList|HTMLElement|Element|Window|undefined} [el]
      * @param {*} [callback]
-	 * @param {{}|boolean} [options]
+     * @param {{}|boolean} [options]
      */
     off(event, el, callback, options) {
-        const events =  event.split(' ')
+        const events = event.split(' ')
 
         for (let i = 0; i < events.length; i++) {
-			if (el === undefined) {
-				listeners[events[i]] = []
-				continue
-			}
+            if (el === undefined) {
+                listeners[events[i]] = []
+                continue
+            }
 
-			if (typeof el === 'function') {
-				makeBusStack(events[i])
+            if (typeof el === 'function') {
+                makeBusStack(events[i])
 
-				for (let n = 0; n < listeners[events[i]].length; n++) {
-					if (listeners[events[i]][n] === el) {
-						listeners[events[i]].splice(n, 1)
-					}
-				}
-				continue
-			}
+                for (let n = 0; n < listeners[events[i]].length; n++) {
+                    if (listeners[events[i]][n] === el) {
+                        listeners[events[i]].splice(n, 1)
+                    }
+                }
+                continue
+            }
 
             const map = eventTypes[events[i]]
 
@@ -125,11 +125,11 @@ class E {
                 if (map.size === 0) {
                     delete eventTypes[events[i]]
 
-					if (nonBubblers.indexOf(events[i]) !== -1) {
-						document.removeEventListener(events[i], handleDelegation, true)
-					} else {
-						document.removeEventListener(events[i], handleDelegation)
-					}
+                    if (nonBubblers.indexOf(events[i]) !== -1) {
+                        document.removeEventListener(events[i], handleDelegation, true)
+                    } else {
+                        document.removeEventListener(events[i], handleDelegation)
+                    }
                     continue
                 }
             }
@@ -141,14 +141,14 @@ class E {
 
             el = maybeRunQuerySelector(el)
 
-            for (let n = 0; n < el.length;n++) {
+            for (let n = 0; n < el.length; n++) {
                 el[n].removeEventListener(events[i], callback, options)
             }
         }
     }
 
     /**
-     * Emit a DOM or Bus event.
+     * Emit a Bus event.
      *
      * @param {string} event
      * @param {...*} args
