@@ -1,4 +1,4 @@
-import E from '../instance'
+import E from '../src/e'
 
 const btn = document.getElementById('btn')
 const btn2 = document.getElementById('btn2')
@@ -16,7 +16,6 @@ class Foo {
         E.delegate('click','#btn3', this.onceHandler)
         E.delegate('click','.deep', this.delegateHandler)
 
-
         E.on('mouseenter', document.querySelectorAll('.nodelist'), () => console.log('nodelist'))
         E.on('mouseenter', [...document.querySelectorAll('.nodelist')], () => console.log('nodelist array'))
 
@@ -24,6 +23,8 @@ class Foo {
         E.delegate('mouseleave', '#mouseover', this.delegatedMouseLeave)
 		//E.off('mouseenter', '#mouseover', this.delegatedMouseEnter)
         //E.off('mouseleave', '#mouseover', this.delegatedMouseLeave)
+
+        E.delegate('blur focus', '.delegatedblurfocus', (e) => console.log(`delegated ${e.type}`))
 
         E.delegate('click','button, h2', () => console.log('qs example'))
 
