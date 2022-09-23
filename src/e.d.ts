@@ -15,11 +15,11 @@ declare class E {
      * Bind event to a string, NodeList, or element.
      *
      * @param {string} event
-     * @param {string|NodeList|HTMLElement|Element|Window|Document|array|function} el
+     * @param {string|NodeList|HTMLElement|HTMLElement[]|Window|Document|function} el
      * @param {*} [callback]
      * @param {{}|boolean} [options]
      */
-    on(event: string, el: string | NodeList | HTMLElement | Element | Window | Document | any[] | Function, callback?: any, options?: {} | boolean): void;
+    on(event: string, el: string | NodeList | HTMLElement | HTMLElement[] | Window | Document | Function, callback?: any, options?: {} | boolean): void;
     /**
      * Add a delegated event.
      *

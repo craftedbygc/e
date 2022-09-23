@@ -14,7 +14,7 @@ const listeners = {}
  * Events that don't bubble
  * @type {string[]}
  */
-const nonBubblers = ['mouseenter', 'mouseleave', 'pointerenter', 'pointerleave']
+const nonBubblers = ['mouseenter', 'mouseleave', 'pointerenter', 'pointerleave', 'blur', 'focus']
 
 /**
  * Make a bus stack if not already created.
