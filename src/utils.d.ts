@@ -43,6 +43,8 @@ export function handleDelegation(e: Event): void;
  * Creates a deep clone of an object.
  *
  * @param object
- * @returns {object|array}
+ * @returns {Object.<string, array>}
  */
-export function clone(object: any): object | any[];
+export function clone(object: any): {
+    [x: string]: any[];
+};

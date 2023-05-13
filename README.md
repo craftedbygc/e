@@ -100,12 +100,21 @@ E.off('my.bus.event', callback)
 E.off('my.bus.event')
 ```
 
+### Debugging
+```js
+// returns a object containing the current bus events registered
+E.debugBus()
+
+// returns a boolean indicating if the event has listeners or not
+E.hasBus('my.bus.event')
+```
+
 ## Binding handlers to maintain scope
 There are many ways to ensure that your event handlers keep the correct context when working with OO.
 
 #### Closure method (preferred)
 
-Probably the simplest method way to keep scope in handlers is to use Babel:
+Probably the simplest method way to keep scope in handlers is to use ES6:
 
 ```js
 class Foo {
@@ -148,4 +157,3 @@ class Foo {
     }
 }
 ```
-

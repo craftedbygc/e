@@ -160,19 +160,29 @@ class E {
     /**
      * Return a clone of the delegated event stack for debugging.
      *
-     * @returns {{}}
+     * @returns {Object.<string, array>}
      */
     debugDelegated() {
-        return clone(eventTypes)
+        return JSON.parse(JSON.stringify(eventTypes))
     }
 
     /**
      * Return a clone of the bus event stack for debugging.
      *
-     * @returns {array}
+     * @returns {Object.<string, array>}
      */
     debugBus() {
         return clone(listeners)
+    }
+
+    /**
+     * Checks if a given bus event has listeners.
+     *
+     * @param {string} event
+     * @returns {boolean}
+     */
+    hasBus(event) {
+        return this.debugBus().hasOwnProperty(event)
     }
 }
 
