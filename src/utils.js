@@ -120,10 +120,16 @@ function addDelegateTarget(event, delegatedTarget) {
  * Creates a deep clone of an object.
  *
  * @param object
- * @returns {object|array}
+ * @returns {Object.<string, array>}
  */
 function clone(object) {
-	return JSON.parse(JSON.stringify(object))
+    const copy = {}
+
+    for (const key in object) {
+        copy[key] = [...object[key]]
+    }
+
+	return copy
 }
 
 export {

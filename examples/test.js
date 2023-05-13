@@ -32,6 +32,8 @@ class Foo {
         E.on('event.bus.event event.bus.event2', this.listener)
         E.on('click', '#bus-test', this.triggerBus)
         E.on('click', '#bus-off', this.removeBus)
+
+        console.log(E.hasBus('doesnt exist'), E.debugDelegated())
     }
 
     delegatedMouseEnter() {
