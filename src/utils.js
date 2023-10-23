@@ -23,7 +23,7 @@ const nonBubblers = ['mouseenter', 'mouseleave', 'pointerenter', 'pointerleave',
  */
 function makeBusStack(event) {
     if (listeners[event] === undefined) {
-        listeners[event] = []
+        listeners[event] = new Set()
     }
 }
 
@@ -35,9 +35,9 @@ function makeBusStack(event) {
  */
 function triggerBus(event, args) {
     if (listeners[event]) {
-        for (let i = 0; i < listeners[event].length; i++) {
-            listeners[event][i](...args)
-        }
+        listeners[event].forEach(cb => {
+            cb(...args)
+        })
     }
 }
 

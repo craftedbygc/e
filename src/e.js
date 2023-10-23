@@ -44,7 +44,7 @@ class E {
         for (let i = 0; i < events.length; i++) {
             if (typeof el === 'function' && callback === undefined) {
                 makeBusStack(events[i])
-                listeners[events[i]].push(el)
+                listeners[events[i]].add(el)
                 continue
             }
 
@@ -102,18 +102,13 @@ class E {
 
         for (let i = 0; i < events.length; i++) {
             if (el === undefined) {
-                listeners[events[i]] = []
+                listeners[events[i]]?.clear()
                 continue
             }
 
             if (typeof el === 'function') {
                 makeBusStack(events[i])
-
-                for (let n = 0; n < listeners[events[i]].length; n++) {
-                    if (listeners[events[i]][n] === el) {
-                        listeners[events[i]].splice(n, 1)
-                    }
-                }
+                listeners[events[i]].delete(el)
                 continue
             }
 
