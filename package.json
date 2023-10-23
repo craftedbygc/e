@@ -1,6 +1,6 @@
 {
     "name": "@unseenco/e",
-    "version": "2.3.0",
+    "version": "2.4.0",
     "description": "The complete (but tiny) js events solution - An event bus/emitter, simple DOM event API, and incredibly efficient delegated events.",
     "keywords": [
         "eventbus",
