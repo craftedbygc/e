@@ -1,6 +1,6 @@
 {
     "name": "@unseenco/e",
-    "version": "2.4.0",
+    "version": "2.5.0",
     "description": "The complete (but tiny) js events solution - An event bus/emitter, simple DOM event API, and incredibly efficient delegated events.",
     "keywords": [
         "eventbus",
@@ -24,8 +24,13 @@
             "email": "jake@unseen.co"
         }
     ],
+    "author": {
+        "name": "Jake Whiteley / Unseen Studio Ltd",
+        "email": "jake@unseen.co",
+        "url": "https://unseen.co"
+    },
     "homepage": "https://unseen.co",
-    "license": "GPL-3.0-or-later",
+    "license": "BSD-3-Clause",
     "publishConfig": {
         "access": "public"
     },
