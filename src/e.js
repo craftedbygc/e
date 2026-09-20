@@ -8,7 +8,7 @@ import {
     maybeRunQuerySelector,
     nonBubblers,
     triggerBus
-} from './utils'
+} from './utils.js'
 
 /**
  * Public API
